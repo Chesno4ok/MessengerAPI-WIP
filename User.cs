@@ -12,4 +12,19 @@ public partial class User
     public string Login { get; set; } = null!;
 
     public string Password { get; set; } = null!;
+
+    public int HasUpdates { get; set; }
+
+    public string? UserToken { get; set; }
+}
+public partial class UserUpdateResponse
+{
+    public int Id { get; set; }
+    public int HasUpdates { get; set; }
+}
+
+public partial class UserTokenResponse
+{
+    public int Id { get; set; }
+    public string? UserToken { get; set; }
 }

@@ -16,7 +16,6 @@ namespace ChesnokMessengerAPI.Controllers
             _context = new MessengerApiContext();
         }
 
-
         [HttpGet("get_user")]
         public IActionResult GetUser(int? id)
         {
@@ -35,41 +34,106 @@ namespace ChesnokMessengerAPI.Controllers
             return Ok(user);
         }
 
+        [HttpGet("get_token")]
+        public IActionResult GetToken(int? id, string? login, string? password)
+        {
+            if (id == null || login == null || password == null)
+            {
+                return BadRequest(new Response()
+                {
+                    status = "Error",
+                    message = "Incorrect parametrs"
+                }.ToJson());
+            }
+
+            var user = _context.Users.FirstOrDefault(i => i.Id == id && i.Login == login && i.Password == password);
+
+            if(user == null)
+            {
+                return BadRequest(new Response()
+                {
+                    status = "Error",
+                    message = "Incorrect parametrs. User not found"
+                }.ToJson());
+            }
+
+            return Ok(new UserTokenResponse() { 
+                Id = user.Id, 
+                UserToken = user.UserToken});
+        }
+
+        [HttpGet("check_updates")]
+        public IActionResult CheckUpdates(int? id, string? token)
+        {
+            if (id == null)
+            {
+                return BadRequest(new Response()
+                {
+                    status = "Error",
+                    message = "Incorrect parametrs"
+                }.ToJson());
+            }
+
+            var user = _context.Users.FirstOrDefault(i => i.Id == id && i.UserToken == token);
+
+            if(user == null)
+            {
+                return BadRequest(new Response()
+                {
+                    status = "Error",
+                    message = "Incorrect token"
+                }.ToJson());
+            }
+
+            return Ok(new UserUpdateResponse() { Id = (int)id, HasUpdates = user.HasUpdates});
+        }
+
         [HttpPost("register_user")]
         public IActionResult RegisterUser(string? userName, string? login, string? password)
         {
-            if(userName == null || login == null || password == null)
+            if (userName == null || login == null || password == null)
             {
-                return BadRequest(new Response() { status = "Error", reason = "Incorrect parametrs" }.ToJson());
+                return BadRequest(new Response()
+                {
+                    status = "Error",
+                    message = "Incorrect parametrs"
+                }.ToJson());
             }
 
             var user = _context.Users.FirstOrDefault(i => i.Login == login);
 
             if (user != null)
             {
-                return BadRequest(new Response() { status = "Error", reason = "login already exists" }.ToJson());
+                return BadRequest(new Response()
+                {
+                    status = "Error",
+                    message = "login already exists"
+                }.ToJson());
             }
+
+            _context.Users.Add(new User
+            {
+                Login = login,
+                UserName = userName,
+                Password = password,
+                UserToken = System.Guid.NewGuid().ToString()
+            });
 
             try
             {
-                _context.Users.Add(new User { Login = login, UserName = userName, Password = password });
                 _context.SaveChanges();
                 return Ok();
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
-                return BadRequest(new Response() { status = "Error", reason = exc.Message }.ToJson());
+                return BadRequest(new Response()
+                {
+                    status = "Error",
+                    message = exc.Message
+                }.ToJson());
             }
-            
-
-
         }
-
-
-        
     }
-
-   
 }
 
 

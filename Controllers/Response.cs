@@ -3,6 +3,6 @@
     public class Response
     {
         public string? status;
-        public string? reason;
+        public string? message;
     }
 }
