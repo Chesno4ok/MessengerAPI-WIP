@@ -44,17 +44,15 @@ public partial class MessengerApiContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Login)
-                .HasColumnType("text")
+                .IsUnicode(false)
                 .HasColumnName("login");
             entity.Property(e => e.Password)
-                .HasColumnType("text")
+                .IsUnicode(false)
                 .HasColumnName("password");
             entity.Property(e => e.UserName)
-                .HasColumnType("text")
+                .IsUnicode(false)
                 .HasColumnName("userName");
         });
 
