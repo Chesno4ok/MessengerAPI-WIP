@@ -17,7 +17,7 @@ namespace ChesnokMessengerAPI.Controllers
         }
 
         [HttpGet("get_user")]
-        public IActionResult GetUser(int? id)
+        public IActionResult GetUser(int id)
         {
             if(id == null)
             {
@@ -31,20 +31,16 @@ namespace ChesnokMessengerAPI.Controllers
                 return NotFound();
             }
 
-            return Ok(user);
+            return Ok(new UserResponse
+            {
+                Id = user.Id,
+                UserName = user.UserName
+            });
         }
 
         [HttpGet("get_token")]
-        public IActionResult GetToken(int? id, string? login, string? password)
+        public IActionResult GetToken(int id, string login, string password)
         {
-            if (id == null || login == null || password == null)
-            {
-                return BadRequest(new Response()
-                {
-                    status = "Error",
-                    message = "Incorrect parametrs"
-                }.ToJson());
-            }
 
             var user = _context.Users.FirstOrDefault(i => i.Id == id && i.Login == login && i.Password == password);
 
@@ -63,16 +59,8 @@ namespace ChesnokMessengerAPI.Controllers
         }
 
         [HttpGet("check_updates")]
-        public IActionResult CheckUpdates(int? id, string? token)
+        public IActionResult CheckUpdates(int id, string token)
         {
-            if (id == null)
-            {
-                return BadRequest(new Response()
-                {
-                    status = "Error",
-                    message = "Incorrect parametrs"
-                }.ToJson());
-            }
 
             var user = _context.Users.FirstOrDefault(i => i.Id == id && i.UserToken == token);
 
@@ -89,16 +77,8 @@ namespace ChesnokMessengerAPI.Controllers
         }
 
         [HttpPost("register_user")]
-        public IActionResult RegisterUser(string? userName, string? login, string? password)
+        public IActionResult RegisterUser(string userName, string login, string password)
         {
-            if (userName == null || login == null || password == null)
-            {
-                return BadRequest(new Response()
-                {
-                    status = "Error",
-                    message = "Incorrect parametrs"
-                }.ToJson());
-            }
 
             var user = _context.Users.FirstOrDefault(i => i.Login == login);
 
@@ -111,18 +91,19 @@ namespace ChesnokMessengerAPI.Controllers
                 }.ToJson());
             }
 
-            _context.Users.Add(new User
+            user = new User()
             {
                 Login = login,
                 UserName = userName,
                 Password = password,
                 UserToken = System.Guid.NewGuid().ToString()
-            });
+            };
+            _context.Users.Add(user);
 
             try
             {
                 _context.SaveChanges();
-                return Ok();
+                return Ok(new UserTokenResponse { Id = user.Id, UserToken = user.UserToken});
             }
             catch (Exception exc)
             {
