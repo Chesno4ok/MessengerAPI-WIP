@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
 using ChesnokMessengerAPI.Responses;
+using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace ChesnokMessengerAPI.Controllers
 {
@@ -18,7 +20,7 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("get_messages")]
         public IActionResult GetMessages(int userId, string token)
         {
-            var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.UserToken == token);
+            var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
             if (user == null)
                 return BadRequest(new Response()
                 {
@@ -27,23 +29,27 @@ namespace ChesnokMessengerAPI.Controllers
                 });
 
             List<Chat> chats = _context.Chats.Where(i => i.User == userId).ToList();
+            List<Message> msgs = new List<Message>();
+            foreach(Chat c in chats)
+            {
+                msgs.AddRange(_context.Messages.Where(m => m.ChatId == c.ChatId));
+            }
+            msgs.OrderBy(i => i.Date);
+            msgs.ConvertAll(i => i as MessageData);
 
-            List<Message> msgs = _context.Messages.Where(i => chats.Any(x => x.ChatId == i.ChatId)).ToList();
-
-            return Ok(msgs);
+            return Ok(JsonConvert.SerializeObject(msgs));
         }
-
         [HttpPost("send_message")]
-        public IActionResult SendMessage(int fromId, string chatId, string token, string content)
+        public IActionResult SendMessage(int fromId, int chatId, string token, string content)
         {
-            var user = _context.Users.FirstOrDefault(i => i.Id == fromId && i.UserToken == token);
+            var user = _context.Users.FirstOrDefault(i => i.Id == fromId && i.Token == token);
             if (user == null)
                 return BadRequest(new Response() { 
                     status = "Error", 
                     message = "Invalid token" });
 
 
-            var chat = _context.Chats.FirstOrDefault(i => i.ChatId == chatId && i.User == fromId);
+            var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId && i.User == fromId);
             if (chat == null)
                 return BadRequest(new Response()
                 {
@@ -56,7 +62,7 @@ namespace ChesnokMessengerAPI.Controllers
             _context.Messages.Add(new Message
             {
                 ChatId = chatId,
-                FromUser = fromId,
+                User = fromId,
                 Content = content,
                 Date = new DateTime()
             });

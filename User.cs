@@ -7,17 +7,17 @@ public partial class User
 {
     public int Id { get; set; }
 
-    public string UserName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     public string Login { get; set; } = null!;
 
     public string Password { get; set; } = null!;
 
-    public int HasUpdates { get; set; }
+    public int Updates { get; set; }
 
-    public string UserToken { get; set; } = null!;
+    public string Token { get; set; } = null!;
 
-    public virtual Chat? Chat { get; set; }
+    public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
 
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 }

@@ -30,7 +30,7 @@ namespace ChesnokMessengerAPI.Controllers
             return Ok(new UserResponse
             {
                 Id = user.Id,
-                UserName = user.UserName
+                Name = user.Name
             });
         }
 
@@ -49,16 +49,16 @@ namespace ChesnokMessengerAPI.Controllers
                 }.ToJson());
             }
 
-            return Ok(new UserTokenResponse() { 
+            return Ok(new TokenResponse() { 
                 Id = user.Id, 
-                UserToken = user.UserToken});
+                Token = user.Token});
         }
 
         [HttpGet("check_updates")]
         public IActionResult CheckUpdates(int id, string token)
         {
 
-            var user = _context.Users.FirstOrDefault(i => i.Id == id && i.UserToken == token);
+            var user = _context.Users.FirstOrDefault(i => i.Id == id && i.Token == token);
 
             if(user == null)
             {
@@ -69,11 +69,11 @@ namespace ChesnokMessengerAPI.Controllers
                 }.ToJson());
             }
 
-            return Ok(new UserUpdateResponse() { Id = (int)id, HasUpdates = user.HasUpdates});
+            return Ok(new UserUpdateResponse() { Id = (int)id, Updates = user.Updates});
         }
 
         [HttpPost("register_user")]
-        public IActionResult RegisterUser(string userName, string login, string password)
+        public IActionResult RegisterUser(string name, string login, string password)
         {
 
             var user = _context.Users.FirstOrDefault(i => i.Login == login);
@@ -90,16 +90,16 @@ namespace ChesnokMessengerAPI.Controllers
             user = new User()
             {
                 Login = login,
-                UserName = userName,
+                Name = name,
                 Password = password,
-                UserToken = System.Guid.NewGuid().ToString()
+                Token = System.Guid.NewGuid().ToString()
             };
             _context.Users.Add(user);
 
             try
             {
                 _context.SaveChanges();
-                return Ok(new UserTokenResponse { Id = user.Id, UserToken = user.UserToken});
+                return Ok(new TokenResponse { Id = user.Id, Token = user.Token});
             }
             catch (Exception exc)
             {

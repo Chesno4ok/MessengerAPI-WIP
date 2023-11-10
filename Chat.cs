@@ -7,9 +7,9 @@ public partial class Chat
 {
     public int Id { get; set; }
 
-    public string ChatId { get; set; } = null!;
+    public int ChatId { get; set; }
 
     public int User { get; set; }
 
-    public virtual User IdNavigation { get; set; } = null!;
+    public virtual User UserNavigation { get; set; } = null!;
 }

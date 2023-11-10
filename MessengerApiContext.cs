@@ -29,16 +29,13 @@ public partial class MessengerApiContext : DbContext
     {
         modelBuilder.Entity<Chat>(entity =>
         {
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.ChatId)
-                .IsUnicode(false)
-                .HasColumnName("chatId");
+            entity.HasKey(e => e.Id).HasName("PK_Chats_1");
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.User).HasColumnName("user");
 
-            entity.HasOne(d => d.IdNavigation).WithOne(p => p.Chat)
-                .HasForeignKey<Chat>(d => d.Id)
+            entity.HasOne(d => d.UserNavigation).WithMany(p => p.Chats)
+                .HasForeignKey(d => d.User)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_User");
         });
@@ -47,44 +44,38 @@ public partial class MessengerApiContext : DbContext
         {
             entity.ToTable("Message");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.ChatId)
-                .IsUnicode(false)
-                .HasColumnName("chatId");
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ChatId).HasColumnName("chatId");
             entity.Property(e => e.Content)
                 .IsUnicode(false)
                 .HasColumnName("content");
             entity.Property(e => e.Date)
                 .HasColumnType("datetime")
                 .HasColumnName("date");
-            entity.Property(e => e.FromUser).HasColumnName("fromUser");
+            entity.Property(e => e.User).HasColumnName("user");
 
-            entity.HasOne(d => d.FromUserNavigation).WithMany(p => p.Messages)
-                .HasForeignKey(d => d.FromUser)
+            entity.HasOne(d => d.UserNavigation).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.User)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Users");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.HasUpdates).HasColumnName("hasUpdates");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Login)
                 .IsUnicode(false)
                 .HasColumnName("login");
+            entity.Property(e => e.Name)
+                .IsUnicode(false)
+                .HasColumnName("name");
             entity.Property(e => e.Password)
                 .IsUnicode(false)
                 .HasColumnName("password");
-            entity.Property(e => e.UserName)
+            entity.Property(e => e.Token)
                 .IsUnicode(false)
-                .HasColumnName("userName");
-            entity.Property(e => e.UserToken)
-                .IsUnicode(false)
-                .HasColumnName("userToken");
+                .HasColumnName("token");
+            entity.Property(e => e.Updates).HasColumnName("updates");
         });
 
         OnModelCreatingPartial(modelBuilder);
