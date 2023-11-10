@@ -11667,23 +11667,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Чеснок\\.nuget\\packages\\": {},
-    "D:\\Programms\\VS SDK\\NuGetPackages": {}
+    "C:\\Users\\chesn\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Чеснок\\YandexDisk\\repos\\ChesnokMessengerAPI\\ChesnokMessengerAPI.csproj",
+      "projectUniqueName": "C:\\Users\\chesn\\Source\\Repos\\ChesnokMessengerAPI2\\ChesnokMessengerAPI.csproj",
       "projectName": "ChesnokMessengerAPI",
-      "projectPath": "C:\\Users\\Чеснок\\YandexDisk\\repos\\ChesnokMessengerAPI\\ChesnokMessengerAPI.csproj",
-      "packagesPath": "C:\\Users\\Чеснок\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Чеснок\\YandexDisk\\repos\\ChesnokMessengerAPI\\obj\\",
+      "projectPath": "C:\\Users\\chesn\\Source\\Repos\\ChesnokMessengerAPI2\\ChesnokMessengerAPI.csproj",
+      "packagesPath": "C:\\Users\\chesn\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\chesn\\Source\\Repos\\ChesnokMessengerAPI2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Programms\\VS SDK\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Чеснок\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\chesn\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -11692,6 +11692,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

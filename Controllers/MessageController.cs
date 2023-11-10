@@ -17,6 +17,7 @@ namespace ChesnokMessengerAPI.Controllers
             _context = new MessengerApiContext();
         }
 
+        // TODO: Clean Up this shit
         [HttpGet("get_messages")]
         public IActionResult GetMessages(int userId, string token)
         {
@@ -35,9 +36,10 @@ namespace ChesnokMessengerAPI.Controllers
                 msgs.AddRange(_context.Messages.Where(m => m.ChatId == c.ChatId));
             }
             msgs.OrderBy(i => i.Date);
-            msgs.ConvertAll(i => i as MessageData);
 
-            return Ok(JsonConvert.SerializeObject(msgs));
+            List<MessageResponse> messageResponses = msgs.ConvertAll(i => new MessageResponse(i));
+
+            return Ok(JsonConvert.SerializeObject(messageResponses));
         }
         [HttpPost("send_message")]
         public IActionResult SendMessage(int fromId, int chatId, string token, string content)
@@ -67,6 +69,7 @@ namespace ChesnokMessengerAPI.Controllers
                 Date = new DateTime()
             });
 
+            _context.SaveChangesAsync();
             return Ok();
         }
 

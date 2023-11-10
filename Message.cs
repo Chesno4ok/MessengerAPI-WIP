@@ -3,13 +3,10 @@ using System.Collections.Generic;
 
 namespace ChesnokMessengerAPI;
 
-public partial class Message : MessageData
+public class Message 
 {
-    public virtual User UserNavigation { get; set; } = null!;
-}
+    public User UserNavigation { get; set; } = null!;
 
-public partial class MessageData
-{
     public int Id { get; set; }
 
     public int User { get; set; }
