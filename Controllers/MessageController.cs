@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
+using ChesnokMessengerAPI.Responses;
 
 namespace ChesnokMessengerAPI.Controllers
 {
@@ -14,63 +15,56 @@ namespace ChesnokMessengerAPI.Controllers
             _context = new MessengerApiContext();
         }
 
-        [HttpGet("get_updates")]
-        public IActionResult GetUpdates(int id, int token)
-        {
-            List<Message> messages = _context.Messages.Where(i => i.ToUser == id).ToList();
-
-            return Ok(messages);
-        }
-
         [HttpGet("get_messages")]
-        public IActionResult GetAllMessages(int id, int token)
+        public IActionResult GetMessages(int userId, string token)
         {
-            List<Message> messages = _context.Messages.Where(i => i.ToUser == id || i.FromUser == id).OrderBy(i => i.Date).ToList();
-
-            return Ok(messages);
-        }
-
-
-        [HttpPost("send_message")]
-        public IActionResult SendMessage(int fromId, int toId, string token, string content)
-        {
-            var fromUser = _context.Users.FirstOrDefault(i => i.Id == fromId);
-            var toUser = _context.Users.FirstOrDefault(i => i.Id == toId);
-
-            if(fromUser == null || toUser == null)
-            {
+            var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.UserToken == token);
+            if (user == null)
                 return BadRequest(new Response()
                 {
                     status = "Error",
-                    message = "Invalid IDs"
-                }.ToJson());
-            }
+                    message = "Invalid token"
+                });
 
-            toUser.HasUpdates = 1;
+            List<Chat> chats = _context.Chats.Where(i => i.User == userId).ToList();
 
-            _context.Messages.Add(new Message()
+            List<Message> msgs = _context.Messages.Where(i => chats.Any(x => x.ChatId == i.ChatId)).ToList();
+
+            return Ok(msgs);
+        }
+
+        [HttpPost("send_message")]
+        public IActionResult SendMessage(int fromId, string chatId, string token, string content)
+        {
+            var user = _context.Users.FirstOrDefault(i => i.Id == fromId && i.UserToken == token);
+            if (user == null)
+                return BadRequest(new Response() { 
+                    status = "Error", 
+                    message = "Invalid token" });
+
+
+            var chat = _context.Chats.FirstOrDefault(i => i.ChatId == chatId && i.User == fromId);
+            if (chat == null)
+                return BadRequest(new Response()
+                {
+                    status = "Error",
+                    message = "Invalid chatId"
+                });
+
+
+
+            _context.Messages.Add(new Message
             {
-                ToUser = toId,
+                ChatId = chatId,
                 FromUser = fromId,
                 Content = content,
                 Date = new DateTime()
             });
 
-            try
-            {
-                _context.SaveChanges();
-                return Ok();
-            }
-            catch (Exception exc)
-            {
-                return BadRequest(new Response()
-                {
-                    status = "Error",
-                    message = exc.Message
-                }.ToJson());
-            }
-
-
+            return Ok();
         }
+
+
+        
     }
 }

@@ -15,6 +15,8 @@ public partial class MessengerApiContext : DbContext
     {
     }
 
+    public virtual DbSet<Chat> Chats { get; set; }
+
     public virtual DbSet<Message> Messages { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -25,6 +27,22 @@ public partial class MessengerApiContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Chat>(entity =>
+        {
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.ChatId)
+                .IsUnicode(false)
+                .HasColumnName("chatId");
+            entity.Property(e => e.User).HasColumnName("user");
+
+            entity.HasOne(d => d.IdNavigation).WithOne(p => p.Chat)
+                .HasForeignKey<Chat>(d => d.Id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_User");
+        });
+
         modelBuilder.Entity<Message>(entity =>
         {
             entity.ToTable("Message");
@@ -32,14 +50,21 @@ public partial class MessengerApiContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.ChatId)
+                .IsUnicode(false)
+                .HasColumnName("chatId");
             entity.Property(e => e.Content)
-                .HasColumnType("text")
+                .IsUnicode(false)
                 .HasColumnName("content");
             entity.Property(e => e.Date)
                 .HasColumnType("datetime")
                 .HasColumnName("date");
             entity.Property(e => e.FromUser).HasColumnName("fromUser");
-            entity.Property(e => e.ToUser).HasColumnName("toUser");
+
+            entity.HasOne(d => d.FromUserNavigation).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.FromUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Users");
         });
 
         modelBuilder.Entity<User>(entity =>

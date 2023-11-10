@@ -1,4 +1,4 @@
-﻿namespace ChesnokMessengerAPI.Controllers
+﻿namespace ChesnokMessengerAPI.Responses
 {
     public class Response
     {

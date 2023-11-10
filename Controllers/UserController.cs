@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ChesnokMessengerAPI.Responses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
@@ -19,11 +20,6 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("get_user")]
         public IActionResult GetUser(int id)
         {
-            if(id == null)
-            {
-                return NotFound();
-            }
-
             var user = _context.Users.FirstOrDefault(i => i.Id == id);
 
             if(user == null)
