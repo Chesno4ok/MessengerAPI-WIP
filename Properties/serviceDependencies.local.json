@@ -7,7 +7,7 @@
       "serviceConnectorResourceId": "",
       "secretStore": "LocalSecretsFile",
       "type": "mssql.onprem",
-      "connectionId": "ConnectionString",
+      "connectionId": "DataBase",
       "dynamicId": null
     }
   }

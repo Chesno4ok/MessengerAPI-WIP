@@ -8,8 +8,8 @@
 
     public partial class TokenResponse
     {
-        public new int Id { get; set; }
-        public new string? Token { get; set; }
+        public  int Id { get; set; }
+        public  string? Token { get; set; }
     }
 
     public partial class UserResponse

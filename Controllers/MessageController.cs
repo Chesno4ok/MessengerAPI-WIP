@@ -21,15 +21,8 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("get_messages")]
         public IActionResult GetMessages(int userId, string token)
         {
-            var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
-            if (user == null)
-                return BadRequest(new Response()
-                {
-                    status = "Error",
-                    message = "Invalid token"
-                });
-
             List<Chat> chats = _context.Chats.Where(i => i.User == userId).ToList();
+
             List<Message> msgs = new List<Message>();
             foreach(Chat c in chats)
             {
@@ -39,41 +32,34 @@ namespace ChesnokMessengerAPI.Controllers
 
             List<MessageResponse> messageResponses = msgs.ConvertAll(i => new MessageResponse(i));
 
-            return Ok(JsonConvert.SerializeObject(messageResponses));
+            return Ok(messageResponses.ToJson());
         }
         [HttpPost("send_message")]
-        public IActionResult SendMessage(int fromId, int chatId, string token, string content)
+        public IActionResult SendMessage(int userId, int chatId, string token, string content)
         {
-            var user = _context.Users.FirstOrDefault(i => i.Id == fromId && i.Token == token);
-            if (user == null)
-                return BadRequest(new Response() { 
-                    status = "Error", 
-                    message = "Invalid token" });
-
-
-            var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId && i.User == fromId);
+            var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId && i.User == userId);
             if (chat == null)
-                return BadRequest(new Response()
-                {
-                    status = "Error",
-                    message = "Invalid chatId"
-                });
+                return BadRequest(new Response("Error", "Invalid Chat Id").ToJson());
 
 
 
             _context.Messages.Add(new Message
             {
                 ChatId = chatId,
-                User = fromId,
+                User = userId,
                 Content = content,
-                Date = new DateTime()
+                Date = DateTime.Now
             });
 
-            _context.SaveChangesAsync();
-            return Ok();
+            try
+            {
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(new Response("Error", exc.Message).ToJson());
+            }
         }
-
-
-        
     }
 }

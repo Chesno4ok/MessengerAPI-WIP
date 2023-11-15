@@ -18,9 +18,9 @@ namespace ChesnokMessengerAPI.Controllers
         }
 
         [HttpGet("get_user")]
-        public IActionResult GetUser(int id)
+        public IActionResult GetUser(int userId)
         {
-            var user = _context.Users.FirstOrDefault(i => i.Id == id);
+            var user = _context.Users.FirstOrDefault(i => i.Id == userId);
 
             if(user == null)
             {
@@ -35,18 +35,15 @@ namespace ChesnokMessengerAPI.Controllers
         }
 
         [HttpGet("get_token")]
-        public IActionResult GetToken(int id, string login, string password)
+        public IActionResult GetToken(int userId, string login, string password)
         {
 
-            var user = _context.Users.FirstOrDefault(i => i.Id == id && i.Login == login && i.Password == password);
+            var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.Login == login && i.Password == password);
 
             if(user == null)
             {
-                return BadRequest(new Response()
-                {
-                    status = "Error",
-                    message = "Incorrect parametrs. User not found"
-                }.ToJson());
+                return BadRequest(new Response("Error", "Incorrect parametrs. User not found")
+                .ToJson());
             }
 
             return Ok(new TokenResponse() { 
@@ -55,21 +52,17 @@ namespace ChesnokMessengerAPI.Controllers
         }
 
         [HttpGet("check_updates")]
-        public IActionResult CheckUpdates(int id, string token)
+        public IActionResult CheckUpdates(int userId, string token)
         {
 
-            var user = _context.Users.FirstOrDefault(i => i.Id == id && i.Token == token);
+            var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
 
             if(user == null)
             {
-                return BadRequest(new Response()
-                {
-                    status = "Error",
-                    message = "Incorrect token"
-                }.ToJson());
+                return BadRequest(new Response("Error","Incorrect token").ToJson());
             }
 
-            return Ok(new UserUpdateResponse() { Id = (int)id, Updates = user.Updates});
+            return Ok(new UserUpdateResponse() { Id = (int)userId, Updates = user.Updates});
         }
 
         [HttpPost("register_user")]
@@ -80,11 +73,7 @@ namespace ChesnokMessengerAPI.Controllers
 
             if (user != null)
             {
-                return BadRequest(new Response()
-                {
-                    status = "Error",
-                    message = "login already exists"
-                }.ToJson());
+                return BadRequest(new Response( "Error", "login already exists").ToJson());
             }
 
             user = new User()
@@ -103,11 +92,7 @@ namespace ChesnokMessengerAPI.Controllers
             }
             catch (Exception exc)
             {
-                return BadRequest(new Response()
-                {
-                    status = "Error",
-                    message = exc.Message
-                }.ToJson());
+                return BadRequest(new Response("Error",exc.Message ).ToJson());
             }
         }
     }

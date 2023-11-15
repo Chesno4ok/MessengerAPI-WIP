@@ -1,4 +1,6 @@
 
+using ChesnokMessengerAPI.Middleware;
+
 namespace ChesnokMessengerAPI
 {
     public class Program
@@ -27,8 +29,10 @@ namespace ChesnokMessengerAPI
 
             app.UseAuthorization();
 
-
             app.MapControllers();
+
+            app.UseMiddleware<ParamCheckMiddleware>();
+            app.UseMiddleware<TokenMiddleware>();
 
             app.Run();
         }
