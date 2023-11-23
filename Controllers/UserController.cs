@@ -35,14 +35,14 @@ namespace ChesnokMessengerAPI.Controllers
         }
 
         [HttpGet("get_token")]
-        public IActionResult GetToken(int userId, string login, string password)
+        public IActionResult GetToken(string login, string password)
         {
 
-            var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.Login == login && i.Password == password);
+            var user = _context.Users.FirstOrDefault(i => i.Login == login && i.Password == password);
 
             if(user == null)
             {
-                return BadRequest(new Response("Error", "Incorrect parametrs. User not found")
+                return BadRequest(new Response("Error", "Incorrect parametrs.")
                 .ToJson());
             }
 
@@ -54,13 +54,7 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("check_updates")]
         public IActionResult CheckUpdates(int userId, string token)
         {
-
             var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
-
-            if(user == null)
-            {
-                return BadRequest(new Response("Error","Incorrect token").ToJson());
-            }
 
             return Ok(new UserUpdateResponse() { Id = (int)userId, Updates = user.Updates});
         }
@@ -68,12 +62,11 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpPost("register_user")]
         public IActionResult RegisterUser(string name, string login, string password)
         {
-
             var user = _context.Users.FirstOrDefault(i => i.Login == login);
 
             if (user != null)
             {
-                return BadRequest(new Response( "Error", "login already exists").ToJson());
+                return BadRequest(new Response("Error", "login already exists").ToJson());
             }
 
             user = new User()
@@ -85,15 +78,9 @@ namespace ChesnokMessengerAPI.Controllers
             };
             _context.Users.Add(user);
 
-            try
-            {
-                _context.SaveChanges();
-                return Ok(new TokenResponse { Id = user.Id, Token = user.Token});
-            }
-            catch (Exception exc)
-            {
-                return BadRequest(new Response("Error",exc.Message ).ToJson());
-            }
+            _context.SaveChanges();
+            return Ok(new TokenResponse { Id = user.Id, Token = user.Token });
+
         }
     }
 }

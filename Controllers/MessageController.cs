@@ -37,12 +37,7 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpPost("send_message")]
         public IActionResult SendMessage(int userId, int chatId, string token, string content)
         {
-            var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId && i.User == userId);
-            if (chat == null)
-                return BadRequest(new Response("Error", "Invalid Chat Id").ToJson());
-
-
-
+            
             _context.Messages.Add(new Message
             {
                 ChatId = chatId,
