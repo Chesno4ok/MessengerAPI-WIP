@@ -21,10 +21,11 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("get_messages")]
         public IActionResult GetMessages(int userId, string token)
         {
-            List<Chat> chats = _context.Chats.Where(i => i.User == userId).ToList();
+            List<ChatUser> chats = _context.ChatUsers.Where(i => i.UserId == userId).ToList();
 
             List<Message> msgs = new List<Message>();
-            foreach(Chat c in chats)
+            
+            foreach(ChatUser c in chats)
             {
                 msgs.AddRange(_context.Messages.Where(m => m.ChatId == c.ChatId));
             }
@@ -46,15 +47,10 @@ namespace ChesnokMessengerAPI.Controllers
                 Date = DateTime.Now
             });
 
-            try
-            {
-                _context.SaveChanges();
-                return Ok();
-            }
-            catch (Exception exc)
-            {
-                return BadRequest(new Response("Error", exc.Message).ToJson());
-            }
+            
+            _context.SaveChanges();
+            return Ok();
+            
         }
     }
 }

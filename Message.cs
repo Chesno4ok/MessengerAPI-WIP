@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace ChesnokMessengerAPI;
 
-public class Message 
+public partial class Message
 {
-    public User UserNavigation { get; set; } = null!;
-
     public int Id { get; set; }
 
     public int User { get; set; }
@@ -16,4 +14,6 @@ public class Message
     public DateTime Date { get; set; }
 
     public string? Content { get; set; }
+
+    public virtual User UserNavigation { get; set; } = null!;
 }

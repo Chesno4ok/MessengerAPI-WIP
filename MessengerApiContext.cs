@@ -17,6 +17,8 @@ public partial class MessengerApiContext : DbContext
 
     public virtual DbSet<Chat> Chats { get; set; }
 
+    public virtual DbSet<ChatUser> ChatUsers { get; set; }
+
     public virtual DbSet<Message> Messages { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -32,12 +34,26 @@ public partial class MessengerApiContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK_Chats_1");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.User).HasColumnName("user");
+            entity.Property(e => e.ChatName)
+                .IsUnicode(false)
+                .HasColumnName("chatName");
+        });
 
-            entity.HasOne(d => d.UserNavigation).WithMany(p => p.Chats)
-                .HasForeignKey(d => d.User)
+        modelBuilder.Entity<ChatUser>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ChatId).HasColumnName("chatId");
+            entity.Property(e => e.UserId).HasColumnName("userId");
+
+            entity.HasOne(d => d.Chat).WithMany(p => p.ChatUsers)
+                .HasForeignKey(d => d.ChatId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_User");
+                .HasConstraintName("chatId");
+
+            entity.HasOne(d => d.User).WithMany(p => p.ChatUsers)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("userId");
         });
 
         modelBuilder.Entity<Message>(entity =>
