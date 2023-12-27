@@ -17,7 +17,7 @@ public partial class User
 
     public string Token { get; set; } = null!;
 
-    public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
+    public virtual ICollection<ChatUser> ChatUsers { get; set; } = new List<ChatUser>();
 
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 }

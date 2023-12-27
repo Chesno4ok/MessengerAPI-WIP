@@ -64,7 +64,7 @@ namespace ChesnokMessengerAPI.Middleware
                 return true;
             }
 
-            var obj = _dbContext.Chats.FirstOrDefault(i => i.ChatId == Convert.ToInt32(query[param]));
+            var obj = _dbContext.Chats.FirstOrDefault(i => i.Id == Convert.ToInt32(query[param]));
 
             if(obj == null)
             {

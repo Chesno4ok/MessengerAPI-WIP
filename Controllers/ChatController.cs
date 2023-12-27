@@ -17,7 +17,7 @@ namespace ChesnokMessengerAPI.Controllers
         }
 
         [HttpPost("create_chat")]
-        public IActionResult CreateChat(int userId, int token, int[] users)
+        public IActionResult CreateChat(int userId, int token, string chatName, int[] users)
         {
             foreach(int i in users) // Checking incoming users
             {
@@ -29,9 +29,13 @@ namespace ChesnokMessengerAPI.Controllers
                 }
             }
 
+            var chat = new Chat() { ChatName = chatName };
+            _context.Chats.Add(chat);
+            _context.SaveChanges();
+
             foreach(int i in users)
             {
-                _context.Chats.Add(new Chat() { ChatId = System.Guid.NewGuid(). })
+                _context.ChatUsers.Add(new ChatUser() { ChatId = chat.Id, UserId = i });
             }
 
 
@@ -42,12 +46,13 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("get_chats")]
         public IActionResult GetChats(int userId, string token)
         {
-            List<Chat> chats = _context.Chats.Where(i => i.User == userId).ToList();
+            List<ChatUser> chats = _context.ChatUsers.Where(i => i.UserId == userId).ToList();
 
-            List<ChatResponse> chatResponses = new List<ChatResponse>();
-            foreach(Chat i in chats)
+            List<ChatUserResponse> chatResponses = new();
+            
+            foreach(ChatUser i in chats)
             {
-                chatResponses.AddRange(_context.Chats.Where(x => x.ChatId == i.ChatId).ToList().ConvertAll(x => new ChatResponse(x)));
+                chatResponses.AddRange(_context.ChatUsers.Where(x => x.ChatId == i.ChatId).ToList().ConvertAll(x => new ChatUserResponse(x)));
             }
 
             chatResponses.OrderBy(i => i.ChatId);
