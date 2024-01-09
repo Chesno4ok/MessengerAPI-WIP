@@ -31,8 +31,9 @@ namespace ChesnokMessengerAPI
 
             app.MapControllers();
 
+            app.UseMiddleware<ExceptionHandler>();
             app.UseMiddleware<ParamCheckMiddleware>();
-            app.UseMiddleware<TokenMiddleware>();
+            //app.UseMiddleware<TokenMiddleware>();
 
             app.Run();
         }

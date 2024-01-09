@@ -3,6 +3,7 @@ using NuGet.Protocol;
 using ChesnokMessengerAPI.Responses;
 using System.Text.Json;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace ChesnokMessengerAPI.Controllers
 {
@@ -16,35 +17,18 @@ namespace ChesnokMessengerAPI.Controllers
         {
             _context = new MessengerApiContext();
         }
-
-        // TODO: Clean Up this shit
-        [HttpGet("get_messages")]
-        public IActionResult GetMessages(int userId, string token)
-        {
-            List<ChatUser> chats = _context.ChatUsers.Where(i => i.UserId == userId).ToList();
-
-            List<Message> msgs = new List<Message>();
-            
-            foreach(ChatUser c in chats)
-            {
-                msgs.AddRange(_context.Messages.Where(m => m.ChatId == c.ChatId));
-            }
-            msgs.OrderBy(i => i.Date);
-
-            List<MessageResponse> messageResponses = msgs.ConvertAll(i => new MessageResponse(i));
-
-            return Ok(messageResponses.ToJson());
-        }
+        // Sene a message to the chat
         [HttpPost("send_message")]
-        public IActionResult SendMessage(int userId, int chatId, string token, string content)
+        public IActionResult SendTextMessage(int userId, string token, int chatId,  string content, string type)
         {
             
             _context.Messages.Add(new Message
             {
                 ChatId = chatId,
                 User = userId,
-                Content = content,
-                Date = DateTime.Now
+                Content = Encoding.Unicode.GetBytes(content),
+                Date = DateTime.Now,
+                Type = type
             });
 
             

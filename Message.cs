@@ -13,7 +13,11 @@ public partial class Message
 
     public DateTime Date { get; set; }
 
-    public string? Content { get; set; }
+    public byte[]? Content { get; set; }
+
+    public string Type { get; set; } = null!;
+
+    public bool IsRead { get; set; }
 
     public virtual User UserNavigation { get; set; } = null!;
 }

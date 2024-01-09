@@ -1,6 +1,10 @@
 ﻿using ChesnokMessengerAPI.Responses;
+using Microsoft.AspNetCore.DataProtection.Repositories;
+using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
+using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace ChesnokMessengerAPI.Middleware
 {
@@ -13,6 +17,8 @@ namespace ChesnokMessengerAPI.Middleware
             _next = next;
             _dbContext = new MessengerApiContext();
         }
+
+        // Check all for parameters correction in http requests
         public Task InvokeAsync(HttpContext context)
         {
             Dictionary<string, string> query = context.Request.Query.ToDictionary(i => i.Key, i => i.Value.ToString());
@@ -24,27 +30,78 @@ namespace ChesnokMessengerAPI.Middleware
 
                 if (user == null)
                 {
-                    context.Response.StatusCode = 400;
-                    context.Response.WriteAsJsonAsync(new Response("Error", "Invalid userId").ToJson());
+                    SendBadRequst(context, "Invalid userId");
                     return Task.CompletedTask;
                 }
 
             }
-            if(query.ContainsKey("chatId"))
+            if (query.ContainsKey("userId") && query.ContainsKey("token"))
+            {
+                int userId = Convert.ToInt32(query["userId"]);
+                string token = query["token"];
+
+                var user = _dbContext.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
+
+                if (user == null)
+                {
+                    SendBadRequst(context, "Invalid token");
+                    return Task.CompletedTask;
+                }
+            }
+            if (query.ContainsKey("userId") && query.ContainsKey("chatId"))
+            {
+                int userId = Convert.ToInt32(query["userId"]);
+                int chatId = Convert.ToInt32(query["chatId"]);
+
+                var chatUser = _dbContext.ChatUsers.FirstOrDefault(i => i.ChatId == chatId && i.UserId == userId);
+
+                if (chatUser == null)
+                {
+                    SendBadRequst(context, "Invalid chatId");
+                    return Task.CompletedTask;
+                }
+            }
+            if (query.ContainsKey("chatId"))
             {
                 int chatId = Convert.ToInt32(query["chatId"]);
-                var chat = _dbContext.Chats.FirstOrDefault(i => i.Id == chatId);
+                Chat? chat = _dbContext.Chats.FirstOrDefault(i => i.Id == chatId);
 
                 if (chat == null)
                 {
-                    context.Response.StatusCode = 400;
-                    context.Response.WriteAsJsonAsync(new Response("Error", "Invalid chatId").ToJson());
+                    SendBadRequst(context, "Invalid chatId");
                     return Task.CompletedTask;
                 }
             }
+            if(query.ContainsKey("type"))
+            {
+                var rx = new Regex(@"^\..*\z");
+                string[] types = new string[] { "text", "audio", "photo", "video" };
+
+                if (!rx.IsMatch(query["type"]) && !types.Any(i => i == query["type"]))
+                {
+                    SendBadRequst(context, "Invalid type");
+                    return Task.CompletedTask;
+                }
+            }
+            if(query.ContainsKey("content"))
+            {
+                byte[] bytes = Encoding.Unicode.GetBytes(query["content"]);
+
+                if(bytes.Length > 2048)
+                {
+                    SendBadRequst(context, "Content size is too high");
+                    return Task.CompletedTask;
+                }
+            }
+            
 
             _next.Invoke(context);
             return Task.CompletedTask;
+        }
+        private void SendBadRequst(HttpContext context, string reason)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.WriteAsync(new Response("Error", reason).ToJson());
         }
     }
 }

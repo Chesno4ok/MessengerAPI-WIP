@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
+using System.Collections;
 
 namespace ChesnokMessengerAPI.Controllers
 {
@@ -17,6 +18,7 @@ namespace ChesnokMessengerAPI.Controllers
             _context = new MessengerApiContext();
         }
 
+        // Get a user's name
         [HttpGet("get_user")]
         public IActionResult GetUser(int userId)
         {
@@ -34,11 +36,12 @@ namespace ChesnokMessengerAPI.Controllers
             });
         }
 
+        // Get a user's token
         [HttpGet("get_token")]
-        public IActionResult GetToken(string login, string password)
+        public IActionResult GetToken(int userId, string login, string password)
         {
 
-            var user = _context.Users.FirstOrDefault(i => i.Login == login && i.Password == password);
+            var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.Login == login && i.Password == password);
 
             if(user == null)
             {
@@ -51,6 +54,18 @@ namespace ChesnokMessengerAPI.Controllers
                 Token = user.Token});
         }
 
+        // Change user's name
+        [HttpGet("change_username")]
+        public IActionResult ChangeUsername(int userId, string token, string username)
+        {
+            var user = _context.Users.FirstOrDefault(i => i.Id == userId);
+            user.Name = username;
+
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        // Check if a user've receieved a message
         [HttpGet("check_updates")]
         public IActionResult CheckUpdates(int userId, string token)
         {
@@ -59,6 +74,7 @@ namespace ChesnokMessengerAPI.Controllers
             return Ok(new UserUpdateResponse() { Id = (int)userId, Updates = user.Updates});
         }
 
+        // Register a new user
         [HttpPost("register_user")]
         public IActionResult RegisterUser(string name, string login, string password)
         {
@@ -81,6 +97,20 @@ namespace ChesnokMessengerAPI.Controllers
             _context.SaveChanges();
             return Ok(new TokenResponse { Id = user.Id, Token = user.Token });
 
+        }
+        [HttpPost("search_user")]
+        public IActionResult SearchUser(string username)
+        {
+            User[] users = _context.Users.Where(i => i.Name.StartsWith(username)).ToArray();
+
+            List<UserResponse> responses = new List<UserResponse>();
+
+            foreach (User i in users)
+            {
+                responses.Add(new UserResponse() { Id = i.Id, Name = i.Name });
+            }
+
+            return Ok(responses);
         }
     }
 }

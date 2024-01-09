@@ -2,6 +2,7 @@
 using ChesnokMessengerAPI.Responses;
 using NuGet.Protocol;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace ChesnokMessengerAPI.Controllers
 {
@@ -15,9 +16,9 @@ namespace ChesnokMessengerAPI.Controllers
         {
             _context = new MessengerApiContext();
         }
-
+        // Create a new chat with users
         [HttpPost("create_chat")]
-        public IActionResult CreateChat(int userId, int token, string chatName, int[] users)
+        public IActionResult CreateChat(int userId, string token, string chatName, int[] users)
         {
             foreach(int i in users) // Checking incoming users
             {
@@ -33,30 +34,54 @@ namespace ChesnokMessengerAPI.Controllers
             _context.Chats.Add(chat);
             _context.SaveChanges();
 
-            foreach(int i in users)
+            _context.ChatUsers.Add(new ChatUser() { ChatId = chat.Id, UserId = userId });
+            foreach (int i in users)
             {
                 _context.ChatUsers.Add(new ChatUser() { ChatId = chat.Id, UserId = i });
             }
-
-
+            
+            _context.SaveChanges();
             return Ok();
         }
+        // Add users to the chat
+        [HttpPost("add_user")]
+        public IActionResult AddUser(int userId, int chatId, string token, int[] users)
+        {
+            if(users.Any(i => _context.Users.FirstOrDefault(x => x.Id == i) == null))
+            {
+                return BadRequest(new Response("Error", "One of the users is incorrect"));
+            }
 
+            foreach (var i in users)
+            {
+                _context.ChatUsers.Add(new ChatUser() { ChatId = chatId, UserId = userId });
+            }
 
+            _context.SaveChanges();
+            return Ok();
+        }
+        // Get all chats that user is part of
         [HttpGet("get_chats")]
         public IActionResult GetChats(int userId, string token)
         {
-            List<ChatUser> chats = _context.ChatUsers.Where(i => i.UserId == userId).ToList();
+            Chat[] chats = _context.Chats.Where(x => _context.ChatUsers.Where(i => i.UserId == userId).Any(y => y.ChatId == x.Id)).ToArray();
 
-            List<ChatUserResponse> chatResponses = new();
-            
-            foreach(ChatUser i in chats)
+            List<ChatResponse> messages = new();
+
+            foreach (var i in chats)
             {
-                chatResponses.AddRange(_context.ChatUsers.Where(x => x.ChatId == i.ChatId).ToList().ConvertAll(x => new ChatUserResponse(x)));
+                messages.Add(new ChatResponse(i, userId));
             }
 
-            chatResponses.OrderBy(i => i.ChatId);
-            return Ok(chatResponses);
+            return Ok(messages);
+        }
+        [HttpGet("get_chat")]
+        public IActionResult GetChat(int userId, string token, int chatId)
+        {
+            var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId);
+            ChatResponse chatResponse = new ChatResponse(chat, userId);
+
+            return Ok(chatResponse);
         }
     }
 }

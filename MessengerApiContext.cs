@@ -34,9 +34,7 @@ public partial class MessengerApiContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK_Chats_1");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.ChatName)
-                .IsUnicode(false)
-                .HasColumnName("chatName");
+            entity.Property(e => e.ChatName).HasColumnName("chatName");
         });
 
         modelBuilder.Entity<ChatUser>(entity =>
@@ -62,12 +60,14 @@ public partial class MessengerApiContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ChatId).HasColumnName("chatId");
-            entity.Property(e => e.Content)
-                .IsUnicode(false)
-                .HasColumnName("content");
+            entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.Date)
                 .HasColumnType("datetime")
                 .HasColumnName("date");
+            entity.Property(e => e.IsRead).HasColumnName("isRead");
+            entity.Property(e => e.Type)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("type");
             entity.Property(e => e.User).HasColumnName("user");
 
             entity.HasOne(d => d.UserNavigation).WithMany(p => p.Messages)
@@ -79,18 +79,10 @@ public partial class MessengerApiContext : DbContext
         modelBuilder.Entity<User>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Login)
-                .IsUnicode(false)
-                .HasColumnName("login");
-            entity.Property(e => e.Name)
-                .IsUnicode(false)
-                .HasColumnName("name");
-            entity.Property(e => e.Password)
-                .IsUnicode(false)
-                .HasColumnName("password");
-            entity.Property(e => e.Token)
-                .IsUnicode(false)
-                .HasColumnName("token");
+            entity.Property(e => e.Login).HasColumnName("login");
+            entity.Property(e => e.Name).HasColumnName("name");
+            entity.Property(e => e.Password).HasColumnName("password");
+            entity.Property(e => e.Token).HasColumnName("token");
             entity.Property(e => e.Updates).HasColumnName("updates");
         });
 

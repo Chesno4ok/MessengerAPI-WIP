@@ -2,16 +2,40 @@
 {
     public class ChatResponse
     {
-        public ChatResponse(Chat chat)
+        public ChatResponse(Chat chat, int UserId)
         {
-            Id = chat.Id;
+            Users = new();
+            Messages = new();
+
+            var context = new MessengerApiContext();
+
+            ChatId = chat.Id;
+
+            ChatUser[] users = context.ChatUsers.Where(i => i.Chat == chat).ToArray();
+
+            foreach (ChatUser i in users)
+            {
+                Users.Add(new ChatUserResponse(i)); 
+            }
+
+            Message[] messages = context.Messages.Where(i => i.ChatId == ChatId).ToArray();
+
+            foreach (var i in messages)
+            {
+                if (i.User != UserId)
+                {
+                    i.IsRead = true;
+                }
+
+                Messages.Add(new MessageResponse(i));
+            }
+
+            context.SaveChanges();
         }
 
-        public int Id { get; set; }
-
         public int ChatId { get; set; }
-
-        public int User { get; set; }
+        public List<ChatUserResponse> Users { get; set; }
+        public List<MessageResponse> Messages { get; set; }
     }
 
     public class ChatUserResponse
@@ -20,14 +44,17 @@
         {
             Id = chat.Id;
             ChatId = chat.ChatId;
-            User = chat.ChatId;
+            User = chat.UserId;
+
+            var context = new MessengerApiContext();
+            UserName = context.Users.FirstOrDefault(i => i.Id == chat.UserId).Name;
         }
 
         public int Id { get; set; }
-
         public int ChatId { get; set; }
-
         public int User { get; set; }
+        public string UserName { get; set; }
+        
     }
 
 }
