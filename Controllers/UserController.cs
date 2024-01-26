@@ -38,10 +38,10 @@ namespace ChesnokMessengerAPI.Controllers
 
         // Get a user's token
         [HttpGet("get_token")]
-        public IActionResult GetToken(int userId, string login, string password)
+        public IActionResult GetToken(string login, string password)
         {
 
-            var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.Login == login && i.Password == password);
+            var user = _context.Users.FirstOrDefault(i => i.Login == login && i.Password == password);
 
             if(user == null)
             {

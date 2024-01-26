@@ -9,33 +9,35 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ChesnokMessengerAPI
 build_property.RootNamespace = ChesnokMessengerAPI
-build_property.ProjectDir = C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\
+build_property.ProjectDir = C:\Users\chesn\source\repos\ChesnokMessengerAPI\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI
+build_property.MSBuildProjectDirectory = C:\Users\chesn\source\repos\ChesnokMessengerAPI
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/chesn/YandexDisk/repos/123/ChesnokMessengerAPI/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/chesn/source/repos/ChesnokMessengerAPI/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/chesn/YandexDisk/repos/123/ChesnokMessengerAPI/Views/Users/Create.cshtml]
+[C:/Users/chesn/source/repos/ChesnokMessengerAPI/Views/Users/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/chesn/YandexDisk/repos/123/ChesnokMessengerAPI/Views/Users/Delete.cshtml]
+[C:/Users/chesn/source/repos/ChesnokMessengerAPI/Views/Users/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/chesn/YandexDisk/repos/123/ChesnokMessengerAPI/Views/Users/Details.cshtml]
+[C:/Users/chesn/source/repos/ChesnokMessengerAPI/Views/Users/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/chesn/YandexDisk/repos/123/ChesnokMessengerAPI/Views/Users/Edit.cshtml]
+[C:/Users/chesn/source/repos/ChesnokMessengerAPI/Views/Users/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/chesn/YandexDisk/repos/123/ChesnokMessengerAPI/Views/Users/Index.cshtml]
+[C:/Users/chesn/source/repos/ChesnokMessengerAPI/Views/Users/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
