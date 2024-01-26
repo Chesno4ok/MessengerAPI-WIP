@@ -72,3 +72,7 @@ name, login, password
 
 Param
 username
+
+
+ToADD:
+Bad registration response
