@@ -1,7 +1,9 @@
 ﻿using ChesnokMessengerAPI.Responses;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Common;
 using NuGet.Protocol;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -12,6 +14,7 @@ namespace ChesnokMessengerAPI.Middleware
     {
         private readonly RequestDelegate _next;
         private MessengerApiContext _dbContext;
+        private Dictionary<string, string> _query;
         public ParamCheckMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -21,87 +24,143 @@ namespace ChesnokMessengerAPI.Middleware
         // Check all for parameters correction in http requests
         public Task InvokeAsync(HttpContext context)
         {
-            Dictionary<string, string> query = context.Request.Query.ToDictionary(i => i.Key, i => i.Value.ToString());
+            _query = context.Request.Query.ToDictionary(i => i.Key, i => i.Value.ToString());
 
-            if(query.ContainsKey("userId"))
+            string[] keys = _query.Keys.ToArray();
+            MethodInfo[] methods = GetType().GetMethods();
+
+            bool result = true;
+            List<string> invalidParameters = new();
+
+            foreach(var m in methods)
             {
-                int userId = Convert.ToInt32(query["userId"]);
-                var user = _dbContext.Users.FirstOrDefault(i => i.Id == userId);
+                object[] attributes = m.GetCustomAttributes(typeof(ParameterValidation), false).ToArray();
 
-                if (user == null)
+                foreach(ParameterValidation a in attributes)
                 {
-                    SendBadRequst(context, "Invalid userId");
-                    return Task.CompletedTask;
+                    if (a.parameters.Any(i => keys.Contains(i)))
+                    {
+                        result = (bool)m.Invoke(this, null);
+
+                        if(!result)
+                        {
+                            invalidParameters.AddRange(a.parameters);
+                        }
+                    }
                 }
 
             }
-            if (query.ContainsKey("userId") && query.ContainsKey("token"))
+
+            if (result)
             {
-                int userId = Convert.ToInt32(query["userId"]);
-                string token = query["token"];
-
-                var user = _dbContext.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
-
-                if (user == null)
-                {
-                    SendBadRequst(context, "Invalid token");
-                    return Task.CompletedTask;
-                }
+                _next.Invoke(context);
             }
-            if (query.ContainsKey("userId") && query.ContainsKey("chatId"))
+            else
             {
-                int userId = Convert.ToInt32(query["userId"]);
-                int chatId = Convert.ToInt32(query["chatId"]);
-
-                var chatUser = _dbContext.ChatUsers.FirstOrDefault(i => i.ChatId == chatId && i.UserId == userId);
-
-                if (chatUser == null)
-                {
-                    SendBadRequst(context, "Invalid chatId");
-                    return Task.CompletedTask;
-                }
+                SendBadRequst(context, "Invalid parameters", invalidParameters.ToArray());
             }
-            if (query.ContainsKey("chatId"))
-            {
-                int chatId = Convert.ToInt32(query["chatId"]);
-                Chat? chat = _dbContext.Chats.FirstOrDefault(i => i.Id == chatId);
-
-                if (chat == null)
-                {
-                    SendBadRequst(context, "Invalid chatId");
-                    return Task.CompletedTask;
-                }
-            }
-            if(query.ContainsKey("type"))
-            {
-                var rx = new Regex(@"^\..*\z");
-                string[] types = new string[] { "text", "audio", "photo", "video" };
-
-                if (!rx.IsMatch(query["type"]) && !types.Any(i => i == query["type"]))
-                {
-                    SendBadRequst(context, "Invalid type");
-                    return Task.CompletedTask;
-                }
-            }
-            if(query.ContainsKey("content"))
-            {
-                byte[] bytes = Encoding.Unicode.GetBytes(query["content"]);
-
-                if(bytes.Length > 2048)
-                {
-                    SendBadRequst(context, "Content size is too high");
-                    return Task.CompletedTask;
-                }
-            }
-            
-
-            _next.Invoke(context);
             return Task.CompletedTask;
         }
-        private void SendBadRequst(HttpContext context, string reason)
+        private void SendBadRequst(HttpContext context, string reason, string[] parameters)
         {
             context.Response.StatusCode = 400;
-            context.Response.WriteAsync(new Response("Error", reason).ToJson());
+            context.Response.WriteAsync(new InvalidParametersResponse("Error", reason, parameters).ToJson());
+        }
+
+        [ParameterValidation("userId")]
+        public bool Validate_UserId()
+        {
+            int userId = Convert.ToInt32(_query["userId"]);
+            var user = _dbContext.Users.FirstOrDefault(i => i.Id == userId);
+
+            if (user == null)
+                return false;
+            return true;
+        }
+        
+
+        [ParameterValidation("userId","chatId")]
+        public bool Validate_UserId_ChatId()
+        {
+            int userId = Convert.ToInt32(_query["userId"]);
+            int chatId = Convert.ToInt32(_query["chatId"]);
+
+            var chatUser = _dbContext.ChatUsers.FirstOrDefault(i => i.ChatId == chatId && i.UserId == userId);
+
+            if (chatUser == null)
+                return false;
+            return true;
+        }
+        
+
+        [ParameterValidation( "chatId")]
+        public bool Validate_ChatId()
+        {
+            int chatId = Convert.ToInt32(_query["chatId"]);
+            Chat? chat = _dbContext.Chats.FirstOrDefault(i => i.Id == chatId);
+
+            if (chat == null)
+                return false;
+            return true;
+        }
+
+        [ParameterValidation("userId","token")]
+        public bool Validate_UserId_Token()
+        {
+            int userId = Convert.ToInt32(_query["userId"]);
+            string token = _query["token"];
+
+            var user = _dbContext.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
+
+            if (user == null)
+                return false;
+            return true;
+        }
+
+        [ParameterValidation("type")]
+        public bool Validate_Type()
+        {
+            var rx = new Regex(@"^\..*\z");
+            string[] types = new string[] { "text", "audio", "photo", "video" };
+
+            if (!rx.IsMatch(_query["type"]) && !types.Any(i => i == _query["type"]))
+                return false;
+            return true;
+        }
+
+        [ParameterValidation("content")]
+        public bool Validate_Content()
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(_query["content"]);
+
+            if (bytes.Length > 2048)
+                return false;
+            return true;
+        }
+
+        [ParameterValidation("login","password")]
+        public bool Validate_Login_Password()
+        {
+            var user = _dbContext.Users.FirstOrDefault(i => i.Login == _query["login"] && i.Password == _query["password"]);
+
+            if (user == null)
+                return false;
+            return true;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class ParameterValidation : Attribute
+    {
+        public string[] parameters;
+        public ParameterValidation()
+        {
+
+        }
+        public ParameterValidation(params string[] parameters) 
+        {
+            this.parameters = parameters;
+        }
+    }
+
 }
