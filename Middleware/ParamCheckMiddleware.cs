@@ -13,6 +13,7 @@ namespace ChesnokMessengerAPI.Middleware
     public class ParamCheckMiddleware
     {
         private readonly RequestDelegate _next;
+        private HttpContext _httpContext;
         private MessengerApiContext _dbContext;
         private Dictionary<string, string> _query;
         public ParamCheckMiddleware(RequestDelegate next)
@@ -25,9 +26,12 @@ namespace ChesnokMessengerAPI.Middleware
         public Task InvokeAsync(HttpContext context)
         {
             _query = context.Request.Query.ToDictionary(i => i.Key, i => i.Value.ToString());
+            _httpContext = context;
 
             string[] keys = _query.Keys.ToArray();
             MethodInfo[] methods = GetType().GetMethods();
+
+            
 
             bool result = true;
             List<string> invalidParameters = new();
@@ -38,32 +42,28 @@ namespace ChesnokMessengerAPI.Middleware
 
                 foreach(ParameterValidation a in attributes)
                 {
-                    if (a.parameters.Any(i => keys.Contains(i)))
+                    if (a.parameters.All(i => keys.Contains(i)))
                     {
                         result = (bool)m.Invoke(this, null);
 
                         if(!result)
-                        {
                             invalidParameters.AddRange(a.parameters);
-                        }
                     }
                 }
 
             }
 
-            if (result)
-            {
+            if (invalidParameters.Count == 0)
                 _next.Invoke(context);
-            }
             else
-            {
                 SendBadRequst(context, "Invalid parameters", invalidParameters.ToArray());
-            }
+
             return Task.CompletedTask;
         }
+
         private void SendBadRequst(HttpContext context, string reason, string[] parameters)
         {
-            context.Response.StatusCode = 400;
+            context.Response.StatusCode = 401;
             context.Response.WriteAsync(new InvalidParametersResponse("Error", reason, parameters).ToJson());
         }
 
@@ -77,7 +77,6 @@ namespace ChesnokMessengerAPI.Middleware
                 return false;
             return true;
         }
-        
 
         [ParameterValidation("userId","chatId")]
         public bool Validate_UserId_ChatId()
@@ -91,9 +90,8 @@ namespace ChesnokMessengerAPI.Middleware
                 return false;
             return true;
         }
-        
 
-        [ParameterValidation( "chatId")]
+        [ParameterValidation("chatId")]
         public bool Validate_ChatId()
         {
             int chatId = Convert.ToInt32(_query["chatId"]);
@@ -141,6 +139,9 @@ namespace ChesnokMessengerAPI.Middleware
         [ParameterValidation("login","password")]
         public bool Validate_Login_Password()
         {
+            if (_httpContext.Request.Method == "POST")
+                return true;
+
             var user = _dbContext.Users.FirstOrDefault(i => i.Login == _query["login"] && i.Password == _query["password"]);
 
             if (user == null)

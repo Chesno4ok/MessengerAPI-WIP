@@ -10,11 +10,14 @@
             var context = new MessengerApiContext();
 
             ChatId = chat.Id;
+            ChatName = chat.ChatName;
 
             ChatUser[] users = context.ChatUsers.Where(i => i.Chat == chat).ToArray();
 
             foreach (ChatUser i in users)
             {
+                i.HasUpdates = false;
+
                 Users.Add(new ChatUserResponse(i)); 
             }
 
@@ -34,6 +37,7 @@
         }
 
         public int ChatId { get; set; }
+        public string ChatName { get; set; }
         public List<ChatUserResponse> Users { get; set; }
         public List<MessageResponse> Messages { get; set; }
     }

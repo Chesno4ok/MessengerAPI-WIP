@@ -41,6 +41,7 @@ public partial class MessengerApiContext : DbContext
         {
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ChatId).HasColumnName("chatId");
+            entity.Property(e => e.HasUpdates).HasColumnName("hasUpdates");
             entity.Property(e => e.UserId).HasColumnName("userId");
 
             entity.HasOne(d => d.Chat).WithMany(p => p.ChatUsers)
@@ -83,7 +84,6 @@ public partial class MessengerApiContext : DbContext
             entity.Property(e => e.Name).HasColumnName("name");
             entity.Property(e => e.Password).HasColumnName("password");
             entity.Property(e => e.Token).HasColumnName("token");
-            entity.Property(e => e.Updates).HasColumnName("updates");
         });
 
         OnModelCreatingPartial(modelBuilder);

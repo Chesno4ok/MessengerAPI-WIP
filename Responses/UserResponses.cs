@@ -3,7 +3,7 @@
     public partial class UserUpdateResponse
     {
         public int Id { get; set; }
-        public int Updates { get; set; }
+        public List<ChatUser>? Updates { get; set; }
     }
 
     public partial class TokenResponse
