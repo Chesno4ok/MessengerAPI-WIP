@@ -54,7 +54,7 @@ namespace ChesnokMessengerAPI.Controllers
 
             foreach (var i in users)
             {
-                _context.ChatUsers.Add(new ChatUser() { ChatId = chatId, UserId = userId });
+                _context.ChatUsers.Add(new ChatUser() { ChatId = chatId, UserId = i });
             }
 
             _context.SaveChanges();
@@ -75,6 +75,7 @@ namespace ChesnokMessengerAPI.Controllers
 
             return Ok(messages);
         }
+        // Get certain chat
         [HttpGet("get_chat")]
         public IActionResult GetChat(int userId, string token, int chatId)
         {
@@ -82,6 +83,28 @@ namespace ChesnokMessengerAPI.Controllers
             ChatResponse chatResponse = new ChatResponse(chat, userId);
 
             return Ok(chatResponse);
+        }
+        // Get updates
+        [HttpGet("get_updates")]
+        public IActionResult GetUpdates(int userId, string token)
+        {
+            List<ChatUser> chatUsers = _context.ChatUsers.Where(i => i.HasUpdates == true).ToList();
+
+            if (chatUsers.Count() == 0)
+            {
+                return StatusCode(404);
+            }
+
+            List<Chat> chats = _context.Chats
+                .Where(chat => chatUsers.Any(chatUser => chat.Id == chatUser.ChatId)).ToList();
+
+            List<ChatResponse> responses = new List<ChatResponse>();
+            foreach (var i in chats)
+            {
+                responses.Add(new ChatResponse(i, userId));
+            }
+
+            return Ok(responses);
         }
     }
 }

@@ -24,11 +24,6 @@ namespace ChesnokMessengerAPI.Controllers
         {
             var user = _context.Users.FirstOrDefault(i => i.Id == userId);
 
-            if(user == null)
-            {
-                return NotFound();
-            }
-
             return Ok(new UserResponse
             {
                 Id = user.Id,
@@ -42,12 +37,6 @@ namespace ChesnokMessengerAPI.Controllers
         {
 
             var user = _context.Users.FirstOrDefault(i => i.Login == login && i.Password == password);
-
-            if(user == null)
-            {
-                return BadRequest(new Response("Error", "Incorrect parametrs.")
-                .ToJson());
-            }
 
             return Ok(new TokenResponse() { 
                 Id = user.Id, 
@@ -65,13 +54,13 @@ namespace ChesnokMessengerAPI.Controllers
             return Ok();
         }
 
-        // Check if a user've receieved a message
+        // Check if a user has receieved a message
         [HttpGet("check_updates")]
         public IActionResult CheckUpdates(int userId, string token)
         {
-            var user = _context.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
+            var chats = _context.ChatUsers.Where(i => i.UserId == userId && i.HasUpdates == true).ToList();
 
-            return Ok(new UserUpdateResponse() { Id = (int)userId, Updates = user.Updates});
+            return Ok(new UserUpdateResponse() { Id = (int)userId, Updates = chats});
         }
 
         // Register a new user
@@ -112,6 +101,7 @@ namespace ChesnokMessengerAPI.Controllers
 
             return Ok(responses);
         }
+        
     }
 }
 

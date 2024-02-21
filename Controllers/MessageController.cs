@@ -31,7 +31,15 @@ namespace ChesnokMessengerAPI.Controllers
                 Type = type
             });
 
-            
+
+            List<ChatUser> users = _context.ChatUsers.Where(i => i.ChatId == chatId && i.UserId != userId).ToList();
+
+            foreach(var i in users)
+            {
+                i.HasUpdates = true;
+            }
+
+
             _context.SaveChanges();
             return Ok();
             

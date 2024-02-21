@@ -13,8 +13,6 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
-    public int Updates { get; set; }
-
     public string Token { get; set; } = null!;
 
     public virtual ICollection<ChatUser> ChatUsers { get; set; } = new List<ChatUser>();
