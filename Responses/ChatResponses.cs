@@ -50,8 +50,10 @@
             ChatId = chat.ChatId;
             User = chat.UserId;
 
-            var context = new MessengerApiContext();
-            UserName = context.Users.FirstOrDefault(i => i.Id == chat.UserId).Name;
+            using(var context = new MessengerApiContext())
+            {
+                UserName = context.Users.FirstOrDefault(i => i.Id == chat.UserId).Name;
+            }
         }
 
         public int Id { get; set; }

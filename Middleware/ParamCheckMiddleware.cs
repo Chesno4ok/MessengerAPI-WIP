@@ -70,49 +70,50 @@ namespace ChesnokMessengerAPI.Middleware
         [ParameterValidation("userId")]
         public bool Validate_UserId()
         {
+            var _dbContext = new MessengerApiContext();
+
             int userId = Convert.ToInt32(_query["userId"]);
+
             var user = _dbContext.Users.FirstOrDefault(i => i.Id == userId);
 
-            if (user == null)
-                return false;
-            return true;
+            return user != null;
         }
 
         [ParameterValidation("userId","chatId")]
-        public bool Validate_UserId_ChatId()
+        public  bool Validate_UserId_ChatId()
         {
+            var _dbContext = new MessengerApiContext();
+
             int userId = Convert.ToInt32(_query["userId"]);
             int chatId = Convert.ToInt32(_query["chatId"]);
 
             var chatUser = _dbContext.ChatUsers.FirstOrDefault(i => i.ChatId == chatId && i.UserId == userId);
 
-            if (chatUser == null)
-                return false;
-            return true;
+            return chatUser != null;
         }
 
         [ParameterValidation("chatId")]
         public bool Validate_ChatId()
         {
-            int chatId = Convert.ToInt32(_query["chatId"]);
-            Chat? chat = _dbContext.Chats.FirstOrDefault(i => i.Id == chatId);
+            var _dbContext = new MessengerApiContext();
 
-            if (chat == null)
-                return false;
-            return true;
+            int chatId = Convert.ToInt32(_query["chatId"]);
+            Chat? chat =  _dbContext.Chats.FirstOrDefault(i => i.Id == chatId);
+
+            return chat != null;
         }
 
         [ParameterValidation("userId","token")]
         public bool Validate_UserId_Token()
         {
+            var _dbContext = new MessengerApiContext();
+
             int userId = Convert.ToInt32(_query["userId"]);
             string token = _query["token"];
 
-            var user = _dbContext.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
+            var user =  _dbContext.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
 
-            if (user == null)
-                return false;
-            return true;
+            return user != null;
         }
 
         [ParameterValidation("type")]
@@ -121,9 +122,7 @@ namespace ChesnokMessengerAPI.Middleware
             var rx = new Regex(@"^\..*\z");
             string[] types = new string[] { "text", "audio", "photo", "video" };
 
-            if (!rx.IsMatch(_query["type"]) && !types.Any(i => i == _query["type"]))
-                return false;
-            return true;
+            return rx.IsMatch(_query["type"]) || types.Any(i => i == _query["type"]);
         }
 
         [ParameterValidation("content")]
@@ -131,22 +130,20 @@ namespace ChesnokMessengerAPI.Middleware
         {
             byte[] bytes = Encoding.Unicode.GetBytes(_query["content"]);
 
-            if (bytes.Length > 2048)
-                return false;
-            return true;
+            return bytes.Length < 2048;
         }
 
         [ParameterValidation("login","password")]
         public bool Validate_Login_Password()
         {
+            var _dbContext = new MessengerApiContext();
+
             if (_httpContext.Request.Method == "POST")
                 return true;
 
             var user = _dbContext.Users.FirstOrDefault(i => i.Login == _query["login"] && i.Password == _query["password"]);
 
-            if (user == null)
-                return false;
-            return true;
+            return user != null;
         }
     }
 

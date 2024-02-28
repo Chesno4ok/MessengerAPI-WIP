@@ -21,8 +21,9 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpPost("send_message")]
         public IActionResult SendTextMessage(int userId, string token, int chatId,  string content, string type)
         {
-            
-            _context.Messages.Add(new Message
+            var _context = new MessengerApiContext();
+
+            _context.Messages.AddAsync(new Message
             {
                 ChatId = chatId,
                 User = userId,
@@ -32,7 +33,7 @@ namespace ChesnokMessengerAPI.Controllers
             });
 
 
-            List<ChatUser> users = _context.ChatUsers.Where(i => i.ChatId == chatId && i.UserId != userId).ToList();
+            var users = _context.ChatUsers.Where(i => i.ChatId == chatId && i.UserId != userId);
 
             foreach(var i in users)
             {

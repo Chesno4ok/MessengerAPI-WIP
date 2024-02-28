@@ -20,6 +20,7 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpPost("create_chat")]
         public IActionResult CreateChat(int userId, string token, string chatName, int[] users)
         {
+            var _context = new MessengerApiContext();
             foreach(int i in users) // Checking incoming users
             {
                 var user = _context.Users.FirstOrDefault(i => i.Id == userId);
@@ -47,7 +48,8 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpPost("add_user")]
         public IActionResult AddUser(int userId, int chatId, string token, int[] users)
         {
-            if(users.Any(i => _context.Users.FirstOrDefault(x => x.Id == i) == null))
+            var _context = new MessengerApiContext();
+            if (users.Any(i => _context.Users.FirstOrDefault(x => x.Id == i) == null))
             {
                 return BadRequest(new Response("Error", "One of the users is incorrect"));
             }
@@ -64,6 +66,7 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("get_chats")]
         public IActionResult GetChats(int userId, string token)
         {
+            var _context = new MessengerApiContext();
             Chat[] chats = _context.Chats.Where(x => _context.ChatUsers.Where(i => i.UserId == userId).Any(y => y.ChatId == x.Id)).ToArray();
 
             List<ChatResponse> messages = new();
@@ -77,8 +80,9 @@ namespace ChesnokMessengerAPI.Controllers
         }
         // Get certain chat
         [HttpGet("get_chat")]
-        public IActionResult GetChat(int userId, string token, int chatId)
+        public  IActionResult GetChat(int userId, string token, int chatId)
         {
+            var _context = new MessengerApiContext();
             var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId);
             ChatResponse chatResponse = new ChatResponse(chat, userId);
 
@@ -88,6 +92,7 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("get_updates")]
         public IActionResult GetUpdates(int userId, string token)
         {
+            var _context = new MessengerApiContext();
             List<ChatUser> chatUsers = _context.ChatUsers.Where(i => i.HasUpdates == true).ToList();
 
             if (chatUsers.Count() == 0)
