@@ -9,5 +9,9 @@ public partial class Chat
 
     public string ChatName { get; set; } = null!;
 
+    public int? LastMessageId { get; set; }
+
     public virtual ICollection<ChatUser> ChatUsers { get; set; } = new List<ChatUser>();
+
+    public virtual Message? LastMessage { get; set; }
 }

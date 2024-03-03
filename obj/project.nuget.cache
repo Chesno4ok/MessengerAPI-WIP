@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ln25u6mRS7e5I8Cbp8wgOh/3lPgqqZvabGJry5ch3Y0UjfqaBuJUa8i4atUWHc5j11vzn3Kox1tqS1Z+Qssngw==",
+  "dgSpecHash": "HuDytmAF1JaUVbOnRLievw2t4So1sj8uFQq9+kY9Muv++wc2TiId6FcKhowN35HbiW5YZmtP95KhI0LmJGfwpQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\chesn\\source\\repos\\ChesnokMessengerAPI\\ChesnokMessengerAPI.csproj",
+  "projectFilePath": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\ChesnokMessengerAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\chesn\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\chesn\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

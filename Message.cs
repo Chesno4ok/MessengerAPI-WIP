@@ -19,5 +19,7 @@ public partial class Message
 
     public bool IsRead { get; set; }
 
+    public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
+
     public virtual User UserNavigation { get; set; } = null!;
 }

@@ -88,15 +88,24 @@ namespace ChesnokMessengerAPI.Controllers
 
             return Ok(chatResponse);
         }
-        // Get certain chat with certain amount of messages
+        // Get certain chat
         [HttpGet("get_chat_amount")]
-        public IActionResult GetChat(int userId, string token, int chatId, int amount)
+        public IActionResult GetChatAmount(int userId, string token, int chatId, int amont)
         {
             var _context = new MessengerApiContext();
             var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId);
-            ChatResponse chatResponse = new ChatResponse(chat, userId, amount);
+            ChatResponse chatResponse = new ChatResponse(chat, userId, amont);
 
             return Ok(chatResponse);
+        }
+        // Get certain chat with certain amount of messages
+        [HttpGet("get_last_message")]
+        public IActionResult GetLasstMessageId(int userId, string token, int chatId)
+        {
+            var _context = new MessengerApiContext();
+            var message = _context.Messages.OrderBy(i => i.Id).LastOrDefault(i => i.ChatId == chatId);
+
+            return Ok(new MessageResponse(message));
         }
         [HttpGet("get_message_amount")]
         public IActionResult GetAmount(int userId, string token, int chatId)

@@ -56,7 +56,7 @@
 
             Message[] messages = context.Messages.Where(i => i.ChatId == ChatId).ToArray().Reverse().ToArray();
 
-            for(int i = 0; i < amount; i++)
+            for(int i = 0; i < amount && messages.Count() > 0; i++)
             {
                 if (messages[i].User != UserId)
                 {

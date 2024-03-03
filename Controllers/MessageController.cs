@@ -23,15 +23,19 @@ namespace ChesnokMessengerAPI.Controllers
         {
             var _context = new MessengerApiContext();
 
-            _context.Messages.AddAsync(new Message
+            var message = new Message
             {
                 ChatId = chatId,
                 User = userId,
                 Content = Encoding.Unicode.GetBytes(content),
                 Date = DateTime.Now,
                 Type = type
-            });
+            };
 
+            _context.Messages.AddAsync(message);
+
+            var chat = _context.Chats.First(i => i.Id == chatId);
+            chat.LastMessageId = _context.Messages.OrderBy(i => i.Date).Last().Id;
 
             var users = _context.ChatUsers.Where(i => i.ChatId == chatId && i.UserId != userId);
 
