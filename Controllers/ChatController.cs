@@ -88,6 +88,24 @@ namespace ChesnokMessengerAPI.Controllers
 
             return Ok(chatResponse);
         }
+        // Get certain chat with certain amount of messages
+        [HttpGet("get_chat_amount")]
+        public IActionResult GetChat(int userId, string token, int chatId, int amount)
+        {
+            var _context = new MessengerApiContext();
+            var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId);
+            ChatResponse chatResponse = new ChatResponse(chat, userId, amount);
+
+            return Ok(chatResponse);
+        }
+        [HttpGet("get_message_amount")]
+        public IActionResult GetAmount(int userId, string token, int chatId)
+        {
+            var _context = new MessengerApiContext();
+            var messages = _context.Messages.Where(i => i.ChatId == chatId);
+
+            return Ok(messages.Count());
+        }
         // Get updates
         [HttpGet("get_updates")]
         public IActionResult GetUpdates(int userId, string token)

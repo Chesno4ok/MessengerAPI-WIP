@@ -28,10 +28,7 @@ namespace ChesnokMessengerAPI.Middleware
             _query = context.Request.Query.ToDictionary(i => i.Key, i => i.Value.ToString());
             _httpContext = context;
 
-            string[] keys = _query.Keys.ToArray();
             MethodInfo[] methods = GetType().GetMethods();
-
-            
 
             bool result = true;
             List<string> invalidParameters = new();
@@ -42,9 +39,10 @@ namespace ChesnokMessengerAPI.Middleware
 
                 foreach(ParameterValidation a in attributes)
                 {
-                    if (a.parameters.All(i => keys.Contains(i)))
+                    
+                    if (a.parameters.All(i => _query.ContainsKey(i)))
                     {
-                        result = (bool)m.Invoke(this, null);
+                        result = (bool)m.Invoke(this, new object[1] {_query});
 
                         if(!result)
                             invalidParameters.AddRange(a.parameters);
@@ -68,7 +66,7 @@ namespace ChesnokMessengerAPI.Middleware
         }
 
         [ParameterValidation("userId")]
-        public bool Validate_UserId()
+        public bool Validate_UserId(Dictionary<string,string> _query)
         {
             var _dbContext = new MessengerApiContext();
 
@@ -80,7 +78,7 @@ namespace ChesnokMessengerAPI.Middleware
         }
 
         [ParameterValidation("userId","chatId")]
-        public  bool Validate_UserId_ChatId()
+        public  bool Validate_UserId_ChatId(Dictionary<string, string> _query)
         {
             var _dbContext = new MessengerApiContext();
 
@@ -93,7 +91,7 @@ namespace ChesnokMessengerAPI.Middleware
         }
 
         [ParameterValidation("chatId")]
-        public bool Validate_ChatId()
+        public bool Validate_ChatId(Dictionary<string, string> _query)
         {
             var _dbContext = new MessengerApiContext();
 
@@ -104,7 +102,7 @@ namespace ChesnokMessengerAPI.Middleware
         }
 
         [ParameterValidation("userId","token")]
-        public bool Validate_UserId_Token()
+        public bool Validate_UserId_Token(Dictionary<string, string> _query)
         {
             var _dbContext = new MessengerApiContext();
 
@@ -117,7 +115,7 @@ namespace ChesnokMessengerAPI.Middleware
         }
 
         [ParameterValidation("type")]
-        public bool Validate_Type()
+        public bool Validate_Type(Dictionary<string, string> _query)
         {
             var rx = new Regex(@"^\..*\z");
             string[] types = new string[] { "text", "audio", "photo", "video" };
@@ -126,7 +124,7 @@ namespace ChesnokMessengerAPI.Middleware
         }
 
         [ParameterValidation("content")]
-        public bool Validate_Content()
+        public bool Validate_Content(Dictionary<string, string> _query)
         {
             byte[] bytes = Encoding.Unicode.GetBytes(_query["content"]);
 
@@ -134,7 +132,7 @@ namespace ChesnokMessengerAPI.Middleware
         }
 
         [ParameterValidation("login","password")]
-        public bool Validate_Login_Password()
+        public bool Validate_Login_Password(Dictionary<string, string> _query)
         {
             var _dbContext = new MessengerApiContext();
 
