@@ -35,6 +35,39 @@
 
             context.SaveChanges();
         }
+        public ChatResponse(Chat chat, int UserId, int amount)
+        {
+            Users = new();
+            Messages = new();
+
+            var context = new MessengerApiContext();
+
+            ChatId = chat.Id;
+            ChatName = chat.ChatName;
+
+            ChatUser[] users = context.ChatUsers.Where(i => i.Chat == chat).ToArray();
+
+            foreach (ChatUser i in users)
+            {
+                i.HasUpdates = false;
+
+                Users.Add(new ChatUserResponse(i));
+            }
+
+            Message[] messages = context.Messages.Where(i => i.ChatId == ChatId).ToArray().Reverse().ToArray();
+
+            for(int i = 0; i < amount; i++)
+            {
+                if (messages[i].User != UserId)
+                {
+                    messages[i].IsRead = true;
+                }
+
+                Messages.Add(new MessageResponse(messages[i]));
+            }
+
+            context.SaveChanges();
+        }
 
         public int ChatId { get; set; }
         public string ChatName { get; set; }
