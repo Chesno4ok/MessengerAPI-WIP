@@ -18,7 +18,6 @@ namespace ChesnokMessengerAPI.Controllers
         {
             _context = new MessengerApiContext();
         }
-
         // Get a user's name
         [HttpGet("get_user")]
         public  IActionResult GetUser(int userId)
@@ -26,25 +25,15 @@ namespace ChesnokMessengerAPI.Controllers
             var _context = new MessengerApiContext();
             var user = _context.Users.FirstOrDefault(i => i.Id == userId);
 
-            return Ok(new UserResponse
-            {
-                Id = user.Id,
-                Name = user.Name
-            });
+            return Ok(user.ToJson());
         }
-
-        // Get a user's token
-        [HttpGet("get_token")]
-        public IActionResult GetToken(string login, string password)
+        public IActionResult GetToken(int userId)
         {
             var _context = new MessengerApiContext();
-            var user = _context.Users.FirstOrDefault(i => i.Login == login && i.Password == password);
+            var user = _context.Users.FirstOrDefault(i => i.Id == userId);
 
-            return Ok(new TokenResponse() { 
-                Id = user.Id, 
-                Token = user.Token});
+            return Ok(new Response("token", user.Token));
         }
-
         // Change user's name
         [HttpGet("change_username")]
         public IActionResult ChangeUsername(int userId, string token, string username)
@@ -53,25 +42,10 @@ namespace ChesnokMessengerAPI.Controllers
             var user = _context.Users.FirstOrDefault(i => i.Id == userId);
             user.Name = username;
 
-             _context.SaveChanges();
-            return Ok();
+             _context.SaveChanges();  
+            return Ok(user.ToJson());
         }
 
-        // Check if a user has receieved a message
-        // Depricated
-        //[HttpGet("check_updates")]
-        //public IActionResult CheckUpdates(int userId, string token)
-        //{
-        //    List<ChatUser> chats;
-        //    using(var context = new MessengerApiContext())
-        //    {
-        //        chats = _context.ChatUsers.Where(i => i.UserId == userId && i.HasUpdates == true).ToList();
-        //    }
-
-        //    return Ok(new UserUpdateResponse() { Id = (int)userId, Updates = chats});
-        //}
-
-        // Register a new user
         [HttpPost("register_user")]
         public async Task<IActionResult> RegisterUser(string name, string login, string password)
         {
@@ -92,10 +66,11 @@ namespace ChesnokMessengerAPI.Controllers
             await _context.Users.AddAsync(user);
 
             await _context.SaveChangesAsync();
-            return Ok(new TokenResponse { Id = user.Id, Token = user.Token });
+
+            return Ok(user.ToJson());
 
         }
-        [HttpPost("search_user")]
+        [HttpGet("search_user")]
         public IActionResult SearchUser(string username)
         {
             User[] users;
@@ -104,17 +79,7 @@ namespace ChesnokMessengerAPI.Controllers
                 users = context.Users.Where(i => i.Name.StartsWith(username)).ToArray();
             }
 
-
-            
-
-            List<UserResponse> responses = new List<UserResponse>();
-
-            foreach (User i in users)
-            {
-                responses.Add(new UserResponse() { Id = i.Id, Name = i.Name });
-            }
-
-            return Ok(responses);
+            return Ok(users.ToJson());
         }
         
     }
