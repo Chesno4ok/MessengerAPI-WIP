@@ -69,7 +69,14 @@ namespace ChesnokMessengerAPI.Controllers
             var _context = new MessengerApiContext();
             Chat[] chats = _context.Chats.Where(x => _context.ChatUsers.Where(i => i.UserId == userId).Any(y => y.ChatId == x.Id)).ToArray();
 
-            return Ok(chats.ToJson());
+            List<ChatResponse> messages = new();
+
+            foreach (var i in chats)
+            {
+                messages.Add(new ChatResponse(i, userId));
+            }
+
+            return Ok(messages);
         }
         // Get certain chat
         [HttpGet("get_chat")]
@@ -77,9 +84,59 @@ namespace ChesnokMessengerAPI.Controllers
         {
             var _context = new MessengerApiContext();
             var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId);
+            ChatResponse chatResponse = new ChatResponse(chat, userId);
 
-            return Ok(chat.ToJson());
+            return Ok(chatResponse);
         }
-        
+        // Get certain chat
+        [HttpGet("get_chat_amount")]
+        public IActionResult GetChatAmount(int userId, string token, int chatId, int amont)
+        {
+            var _context = new MessengerApiContext();
+            var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId);
+            ChatResponse chatResponse = new ChatResponse(chat, userId, amont);
+
+            return Ok(chatResponse);
+        }
+        // Get certain chat with certain amount of messages
+        [HttpGet("get_last_message")]
+        public IActionResult GetLasstMessageId(int userId, string token, int chatId)
+        {
+            var _context = new MessengerApiContext();
+            var message = _context.Messages.OrderBy(i => i.Id).LastOrDefault(i => i.ChatId == chatId);
+
+            return Ok(new MessageResponse(message));
+        }
+        [HttpGet("get_message_amount")]
+        public IActionResult GetAmount(int userId, string token, int chatId)
+        {
+            var _context = new MessengerApiContext();
+            var messages = _context.Messages.Where(i => i.ChatId == chatId);
+
+            return Ok(messages.Count());
+        }
+        // Get updates
+        [HttpGet("get_updates")]
+        public IActionResult GetUpdates(int userId, string token)
+        {
+            var _context = new MessengerApiContext();
+            List<ChatUser> chatUsers = _context.ChatUsers.Where(i => i.HasUpdates == true).ToList();
+
+            if (chatUsers.Count() == 0)
+            {
+                return StatusCode(404);
+            }
+
+            List<Chat> chats = _context.Chats
+                .Where(chat => chatUsers.Any(chatUser => chat.Id == chatUser.ChatId)).ToList();
+
+            List<ChatResponse> responses = new List<ChatResponse>();
+            foreach (var i in chats)
+            {
+                responses.Add(new ChatResponse(i, userId));
+            }
+
+            return Ok(responses);
+        }
     }
 }

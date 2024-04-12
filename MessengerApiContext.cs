@@ -35,6 +35,11 @@ public partial class MessengerApiContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ChatName).HasColumnName("chatName");
+            entity.Property(e => e.LastMessageId).HasColumnName("lastMessageId");
+
+            entity.HasOne(d => d.LastMessage).WithMany(p => p.Chats)
+                .HasForeignKey(d => d.LastMessageId)
+                .HasConstraintName("messageId");
         });
 
         modelBuilder.Entity<ChatUser>(entity =>

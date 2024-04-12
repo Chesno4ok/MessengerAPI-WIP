@@ -1529,10 +1529,9 @@ C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\staticwebassets.build.json
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\staticwebassets.development.json
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\scopedcss\bundle\ChesnokMessengerAPI.styles.css
+C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\ChesnokMessengerAPI.csproj.CopyComplete
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\ChesnokMessengerAPI.dll
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\refint\ChesnokMessengerAPI.dll
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\ChesnokMessengerAPI.pdb
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\ChesnokMessengerAPI.genruntimeconfig.cache
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\ref\ChesnokMessengerAPI.dll
-C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\ChesnokMessengerAPI.sourcelink.json
-C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net7.0\ChesnokM.1FC82728.Up2Date

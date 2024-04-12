@@ -35,6 +35,7 @@ namespace ChesnokMessengerAPI.Controllers
             _context.Messages.AddAsync(message);
 
             var chat = _context.Chats.First(i => i.Id == chatId);
+            chat.LastMessageId = _context.Messages.OrderBy(i => i.Date).Last().Id;
 
             var users = _context.ChatUsers.Where(i => i.ChatId == chatId && i.UserId != userId);
 
@@ -48,31 +49,5 @@ namespace ChesnokMessengerAPI.Controllers
             return Ok();
             
         }
-
-        [HttpGet("get_messages")]
-        public IActionResult GetMessages(int userId, string token, int chatId, int amount)
-        {
-            var context = new MessengerApiContext();
-            var messages = context.Messages.Where(i => i.ChatId == chatId).OrderBy(i => i.Id).Reverse().ToArray();
-
-            return Ok(messages.ToJson());
-        }
-        [HttpGet("get_new_messages")]
-        public IActionResult GetNewMessages(int userId, string token, int chatId, int lastId, int amount)
-        {
-            var context = new MessengerApiContext();
-            var messages = context.Messages.Where(i => i.ChatId == chatId && i.Id > lastId).Take(amount).ToArray();
-
-            return Ok(messages.ToJson());
-        }
-        [HttpGet("get_previous_messages")]
-        public IActionResult GetPrevMessages(int userId, string token, int chatId, int firstId, int amount)
-        {
-            var context = new MessengerApiContext();
-            var messages = context.Messages.Where(i => i.ChatId == chatId && i.Id < firstId).Take(amount).ToArray();
-
-            return Ok(messages.ToJson());
-        }
-
     }
 }
