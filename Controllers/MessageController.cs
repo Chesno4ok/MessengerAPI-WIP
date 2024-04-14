@@ -49,5 +49,14 @@ namespace ChesnokMessengerAPI.Controllers
             return Ok();
             
         }
+        // Get certain chat with certain amount of messages
+        [HttpGet("get_last_message")]
+        public IActionResult GetLasstMessageId(int userId, string token, int chatId)
+        {
+            var _context = new MessengerApiContext();
+            var message = _context.Messages.OrderBy(i => i.Id).LastOrDefault(i => i.ChatId == chatId);
+
+            return Ok(message.ToJson());
+        }
     }
 }
