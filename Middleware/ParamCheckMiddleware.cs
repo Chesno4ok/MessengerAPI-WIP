@@ -14,12 +14,12 @@ namespace ChesnokMessengerAPI.Middleware
     {
         private readonly RequestDelegate _next;
         private HttpContext _httpContext;
-        private MessengerApiContext _dbContext;
+        private MessengerContext _dbContext;
         private Dictionary<string, string> _query;
         public ParamCheckMiddleware(RequestDelegate next)
         {
             _next = next;
-            _dbContext = new MessengerApiContext();
+            _dbContext = new MessengerContext();
         }
 
         // Check all for parameters correction in http requests
@@ -39,7 +39,6 @@ namespace ChesnokMessengerAPI.Middleware
 
                 foreach(ParameterValidation a in attributes)
                 {
-                    
                     if (a.parameters.All(i => _query.ContainsKey(i)))
                     {
                         result = (bool)m.Invoke(this, new object[1] {_query});
@@ -68,11 +67,11 @@ namespace ChesnokMessengerAPI.Middleware
         [ParameterValidation("userId")]
         public bool Validate_UserId(Dictionary<string,string> _query)
         {
-            var _dbContext = new MessengerApiContext();
+            var _dbContext = new MessengerContext();
 
-            int userId = Convert.ToInt32(_query["userId"]);
+            int UserId = Convert.ToInt32(_query["userId"]);
 
-            var user = _dbContext.Users.FirstOrDefault(i => i.Id == userId);
+            var user = _dbContext.Users.FirstOrDefault(i => i.Id == UserId);
 
             return user != null;
         }
@@ -80,23 +79,23 @@ namespace ChesnokMessengerAPI.Middleware
         [ParameterValidation("userId","chatId")]
         public  bool Validate_UserId_ChatId(Dictionary<string, string> _query)
         {
-            var _dbContext = new MessengerApiContext();
+            var _dbContext = new MessengerContext();
 
-            int userId = Convert.ToInt32(_query["userId"]);
-            int chatId = Convert.ToInt32(_query["chatId"]);
+            int UserId = Convert.ToInt32(_query["userId"]);
+            int ChatId = Convert.ToInt32(_query["chatId"]);
 
-            var chatUser = _dbContext.ChatUsers.FirstOrDefault(i => i.ChatId == chatId && i.UserId == userId);
+            var ChatUser = _dbContext.ChatUsers.FirstOrDefault(i => i.ChatId == ChatId && i.UserId == UserId);
 
-            return chatUser != null;
+            return ChatUser != null;
         }
 
         [ParameterValidation("chatId")]
         public bool Validate_ChatId(Dictionary<string, string> _query)
         {
-            var _dbContext = new MessengerApiContext();
+            var _dbContext = new MessengerContext();
 
-            int chatId = Convert.ToInt32(_query["chatId"]);
-            Chat? chat =  _dbContext.Chats.FirstOrDefault(i => i.Id == chatId);
+            int ChatId = Convert.ToInt32(_query["chatId"]);
+            Chat? chat =  _dbContext.Chats.FirstOrDefault(i => i.Id == ChatId);
 
             return chat != null;
         }
@@ -104,12 +103,12 @@ namespace ChesnokMessengerAPI.Middleware
         [ParameterValidation("userId","token")]
         public bool Validate_UserId_Token(Dictionary<string, string> _query)
         {
-            var _dbContext = new MessengerApiContext();
+            var _dbContext = new MessengerContext();
 
-            int userId = Convert.ToInt32(_query["userId"]);
+            int UserId = Convert.ToInt32(_query["userId"]);
             string token = _query["token"];
 
-            var user =  _dbContext.Users.FirstOrDefault(i => i.Id == userId && i.Token == token);
+            var user =  _dbContext.Users.FirstOrDefault(i => i.Id == UserId && i.Token == token);
 
             return user != null;
         }
@@ -134,7 +133,7 @@ namespace ChesnokMessengerAPI.Middleware
         [ParameterValidation("login","password")]
         public bool Validate_Login_Password(Dictionary<string, string> _query)
         {
-            var _dbContext = new MessengerApiContext();
+            var _dbContext = new MessengerContext();
 
             if (_httpContext.Request.Method == "POST")
                 return true;
@@ -142,6 +141,15 @@ namespace ChesnokMessengerAPI.Middleware
             var user = _dbContext.Users.FirstOrDefault(i => i.Login == _query["login"] && i.Password == _query["password"]);
 
             return user != null;
+        }
+        [ParameterValidation("messageId")]
+        public bool Validate_Message(Dictionary<string, string> _query)
+        {
+            using var dbContext = new MessengerContext();
+
+            var messages = dbContext.Messages.FirstOrDefault(i => i.Id == Convert.ToInt32(_query["messageId"]));
+
+            return messages != null;
         }
     }
 

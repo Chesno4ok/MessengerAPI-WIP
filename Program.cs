@@ -1,5 +1,6 @@
 
 using ChesnokMessengerAPI.Middleware;
+using ChesnokMessengerAPI.Services;
 
 namespace ChesnokMessengerAPI
 {
@@ -15,6 +16,7 @@ namespace ChesnokMessengerAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSingleton<GCService>();
 
             var app = builder.Build();
 
@@ -33,7 +35,12 @@ namespace ChesnokMessengerAPI
 
             app.UseMiddleware<ExceptionHandler>();
             app.UseMiddleware<ParamCheckMiddleware>();
-            //app.UseMiddleware<TokenMiddleware>();
+
+            var webSocketOptions = new WebSocketOptions
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(30)
+            };
+            app.UseWebSockets(webSocketOptions);
 
             app.Run();
         }

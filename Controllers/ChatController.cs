@@ -10,17 +10,17 @@ namespace ChesnokMessengerAPI.Controllers
     [Route("[controller]")]
     public class ChatController : ControllerBase
     {
-        private readonly MessengerApiContext _context;
+        private readonly MessengerContext _context;
 
         public ChatController()
         {
-            _context = new MessengerApiContext();
+            _context = new MessengerContext();
         }
         // Create a new chat with users
         [HttpPost("create_chat")]
         public IActionResult CreateChat(int userId, string token, string chatName, int[] users)
         {
-            var _context = new MessengerApiContext();
+            var _context = new MessengerContext();
             foreach(int i in users) // Checking incoming users
             {
                 var user = _context.Users.FirstOrDefault(i => i.Id == userId);
@@ -48,7 +48,7 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpPost("add_user")]
         public IActionResult AddUser(int userId, int chatId, string token, int[] users)
         {
-            var _context = new MessengerApiContext();
+            var _context = new MessengerContext();
             if (users.Any(i => _context.Users.FirstOrDefault(x => x.Id == i) == null))
             {
                 return BadRequest(new Response("Error", "One of the users is incorrect"));
@@ -66,7 +66,7 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("get_chats")]
         public IActionResult GetChats(int userId, string token)
         {
-            var _context = new MessengerApiContext();
+            var _context = new MessengerContext();
             Chat[] chats = _context.Chats.Where(x => _context.ChatUsers.Where(i => i.UserId == userId).Any(y => y.ChatId == x.Id)).ToArray();
 
             return Ok(chats.ToJson());
@@ -75,7 +75,7 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("get_chat")]
         public  IActionResult GetChat(int userId, string token, int chatId)
         {
-            var _context = new MessengerApiContext();
+            var _context = new MessengerContext();
             var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId);
 
             return Ok(chat.ToJson());
@@ -84,7 +84,7 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("get_chat_amount")]
         public IActionResult GetChatAmount(int userId, string token, int chatId)
         {
-            var _context = new MessengerApiContext();
+            var _context = new MessengerContext();
             var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId);
 
             return Ok(chat.ToJson());
