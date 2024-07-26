@@ -8,18 +8,20 @@ namespace ChesnokMessengerAPI.Middleware
     public class ExceptionHandler
     {
         private readonly RequestDelegate _next;
-        private MessengerApiContext _dbContext;
+        private MessengerContext _dbContext;
         public ExceptionHandler(RequestDelegate next)
         {
             _next = next;
-            _dbContext = new MessengerApiContext();
+            _dbContext = new MessengerContext();
         }
 
         public Task InvokeAsync(HttpContext context)
         {
+            _next.Invoke(context);
+
             try
             {
-                _next.Invoke(context);
+                
             }
             catch
             {

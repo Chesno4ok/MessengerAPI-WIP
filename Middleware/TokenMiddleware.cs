@@ -8,12 +8,12 @@ namespace ChesnokMessengerAPI.Middleware
     public class TokenMiddleware
     {
         private readonly RequestDelegate _next;
-        private MessengerApiContext _dbContext;
+        private MessengerContext _dbContext;
         private HttpContext context;
         public TokenMiddleware(RequestDelegate next)
         {
             _next = next;
-            _dbContext = new MessengerApiContext();
+            _dbContext = new MessengerContext();
         }
 
         public Task InvokeAsync(HttpContext context)
@@ -40,7 +40,7 @@ namespace ChesnokMessengerAPI.Middleware
 
         private bool CheckParamUserId(Dictionary<string, string> query)
         {
-            string param = "userId";
+            string param = "UserId";
             if (query.ContainsKey(param))
             {
                 return true;
@@ -58,7 +58,7 @@ namespace ChesnokMessengerAPI.Middleware
 
         private bool CheckParamChat(Dictionary<string, string> query)
         {
-            string param = "chatId";
+            string param = "ChatId";
             if (query.ContainsKey(param))
             {
                 return true;
@@ -76,12 +76,12 @@ namespace ChesnokMessengerAPI.Middleware
 
         private bool CheckParamUser(Dictionary<string, string> query)
         {
-            if ((query.ContainsKey("token") && query.ContainsKey("userId")))
+            if ((query.ContainsKey("token") && query.ContainsKey("UserId")))
             {
                 return true;
             }
 
-            var obj = _dbContext.Users.FirstOrDefault(i => i.Id == Convert.ToInt32(query["userId"]) && i.Token == query["token"]);
+            var obj = _dbContext.Users.FirstOrDefault(i => i.Id == Convert.ToInt32(query["UserId"]) && i.Token == query["token"]);
 
             if (obj == null)
             {
