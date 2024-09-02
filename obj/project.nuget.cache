@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "TzcrvowfXzRh6VowQP2vbxpyurzAO5gj1IE7C9iVoJ6nmQXbd52bZWONCJVmBQFUPTx9cEE0Dbjvl/FGf4/1Vw==",
+  "dgSpecHash": "PXTLGTNQ4Ys6lLfJS7uGTbHJtK+dbEBE0LNNRGgo6KnLclOx+yMCMB6nry7LmizRO2SznIxILgMkiUxwOV4y5g==",
   "success": true,
   "projectFilePath": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\ChesnokMessengerAPI.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\chesn\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\chesn\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\chesn\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
     "C:\\Users\\chesn\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",

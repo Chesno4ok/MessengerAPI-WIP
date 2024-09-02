@@ -256,3 +256,4 @@ C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\ChesnokMessengerAPI.pdb
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\ChesnokMessengerAPI.genruntimeconfig.cache
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\ref\ChesnokMessengerAPI.dll
+C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\bin\Debug\net8.0\AutoMapper.dll

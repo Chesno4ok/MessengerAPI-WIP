@@ -1,4 +1,5 @@
-﻿using ChesnokMessengerAPI.Responses;
+﻿using AutoMapper;
+using ChesnokMessengerAPI.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,11 @@ namespace ChesnokMessengerAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly MessengerContext _context;
+        private IMapper _mapper;
 
-        public UserController()
+        public UserController(IMapper mapper)
         {
+            _mapper = mapper;
             _context = new MessengerContext();
         }
 
@@ -36,11 +39,12 @@ namespace ChesnokMessengerAPI.Controllers
             var _context = new MessengerContext();
             var user = _context.Users.FirstOrDefault(i => i.Login == login && i.Password == password);
 
-            return Ok(user.ToJson());
+            var userToken = _mapper.Map<UserCredentials>(user);
+            return Ok(userToken.ToJson());
         }
 
         // Change user's name
-        [HttpGet("change_username")]
+        [HttpPatch("change_username")]
         public IActionResult ChangeUsername(int userId, string token, string username)
         {
             var _context = new MessengerContext();
@@ -48,7 +52,9 @@ namespace ChesnokMessengerAPI.Controllers
             user.Name = username;
 
              _context.SaveChanges();
-            return Ok(user.ToJson());
+
+            var newUser = _mapper.Map<UserInfo>(user);
+            return Ok(newUser.ToJson());
         }
         [HttpPost("register_user")]
         public async Task<IActionResult> RegisterUser(string name, string login, string password)
@@ -84,13 +90,14 @@ namespace ChesnokMessengerAPI.Controllers
 
             return Ok();
         }
-        [HttpPost("search_user")]
+        [HttpGet("search_user")]
         public IActionResult SearchUser(string username)
         {
+            
             User[] users;
             using (var context = new MessengerContext())
             {
-                users = context.Users.Where(i => i.Name.StartsWith(username)).ToArray();
+                users = context.Users.Where(i => i.Name.ToLower().StartsWith(username)).ToArray();
             }
 
             return Ok(users.ToJson());

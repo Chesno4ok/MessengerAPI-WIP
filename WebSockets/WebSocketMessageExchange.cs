@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.WebSockets;
+using System.Reflection;
 using System.Text;
 using Azure;
 using ChesnokMessengerAPI.Services;
@@ -68,6 +69,60 @@ namespace ChesnokMessengerAPI.WebSockets
                 Array.Clear(receiveBuffer);
             }
         }
+        private Message? ProccessNewMessage(string messageJson)
+        {
+            Message? message = new Message();
+
+            try
+            {
+                message = JsonConvert.DeserializeObject<Message>(messageJson);
+            }
+            catch
+            {
+                return null;
+            }
+
+            if (message == null)
+                return null;
+
+            if (!IsValidMessage(message))
+                return null;
+
+            return message;
+        }
+
+        private bool IsValidMessage(Message message)
+        {
+            using (var db = new MessengerContext())
+            {
+                if (db.Chats.FirstOrDefault(i => i.Id == message.ChatId) == null)
+                    return false;
+                if (db.ChatUsers.FirstOrDefault(i => i.UserId == user.Id && i.ChatId == message.ChatId) == null)
+                    return false;
+            }
+
+            return true;
+        }
+        private void SaveNewMessage(Message message)
+        {
+            message.Date = DateTime.UtcNow;
+            message.User = user.Id;
+
+            using (var db = new MessengerContext())
+            {
+                db.Messages.Add(message);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+                
+            }
+        }
+
         private async Task NotifyNewMessage()
         {
             using (var db = new NpgsqlConnection(DatabaseConnectionService.ConnectionString))
@@ -89,53 +144,18 @@ namespace ChesnokMessengerAPI.WebSockets
         }
         private void OnNewMessage(object sender, NpgsqlNotificationEventArgs e)
         {
-            
-            var dbNotification = System.Text.Json.JsonSerializer.Deserialize<DbNotification>(e.Payload);
-
-            dbNotification.data.Content = HexStringToBase64String(dbNotification.data.Content.Replace("\\x",""));
+            var dbNotification = System.Text.Json.JsonSerializer.Deserialize<DbNotification<Message>>(e.Payload);
 
             using (var db = new MessengerContext())
             {
-                var chat = db.ChatUsers.FirstOrDefault(c => c.UserId == user.Id && c.ChatId == dbNotification.data.ChatId);
+                //var chat = db.ChatUsers.FirstOrDefault(c => c.UserId == user.Id && c.ChatId == dbNotification.data.ChatId);
 
-                if (chat == null)
-                    return;
+                //if (chat == null)
+                //    return;
 
-                SendMessage(dbNotification.data.ToJson());
+                SendMessage(e.Payload);
             }
 
-        }
-        private string HexStringToBase64String(string hexString)
-        {
-            // hex-string is converted to byte-array
-            byte[] stringBytes = System.Convert.FromHexString(hexString);
-
-            // byte-array is converted base64-string
-            string res = System.Convert.ToBase64String(stringBytes);
-
-            return res;
-        }
-        private Message? ProccessNewMessage(string messageJson)
-        {
-            Message? message = new Message();
-
-            try
-            {
-                message = JsonConvert.DeserializeObject<Message>(messageJson);
-            }
-            catch
-            {
-                return null;
-            }
-
-            if (message == null)
-                return null;
-
-
-            if (!IsValidMessage(message))
-                return null;
-
-            return message;
         }
         private void SendMessage(string message)
         {
@@ -164,28 +184,15 @@ namespace ChesnokMessengerAPI.WebSockets
 
 
         }
-        private bool IsValidMessage(Message message)
-        {
-            using (var db = new MessengerContext())
-            {
-                if (db.Chats.FirstOrDefault(i => i.Id == message.ChatId) == null)
-                    return false;
-                if (db.ChatUsers.FirstOrDefault(i => i.UserId == user.Id && i.ChatId == message.ChatId) == null)
-                    return false;
-            }
+    }
 
-            return true;
-        }
-        private void SaveNewMessage(Message message)
-        {
-            message.Date = DateTime.Now;
-            message.User = user.Id;
+    public class TableNotification : Attribute
+    {
+        public string TableName;
 
-            using (var db = new MessengerContext())
-            {
-                db.Messages.Add(message);
-                db.SaveChanges();
-            }
+        public TableNotification(string tableName)
+        {
+            TableName = tableName;
         }
     }
 }

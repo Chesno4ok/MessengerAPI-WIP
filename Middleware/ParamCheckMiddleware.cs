@@ -142,12 +142,23 @@ namespace ChesnokMessengerAPI.Middleware
 
             return user != null;
         }
+
         [ParameterValidation("messageId")]
         public bool Validate_Message(Dictionary<string, string> _query)
         {
             using var dbContext = new MessengerContext();
 
             var messages = dbContext.Messages.FirstOrDefault(i => i.Id == Convert.ToInt32(_query["messageId"]));
+
+            return messages != null;
+        }
+
+        [ParameterValidation("userId","messageId")]
+        public bool Validate_User_Message(Dictionary<string, string> _query)
+        {
+            using var dbContext = new MessengerContext();
+
+            var messages = dbContext.Messages.FirstOrDefault(i => i.Id == Convert.ToInt32(_query["messageId"]) && i.User == Convert.ToInt32(_query["userId"]));
 
             return messages != null;
         }

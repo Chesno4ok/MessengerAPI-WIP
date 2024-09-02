@@ -1,4 +1,5 @@
 
+using AutoMapper;
 using ChesnokMessengerAPI.Middleware;
 using ChesnokMessengerAPI.Services;
 
@@ -17,7 +18,8 @@ namespace ChesnokMessengerAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<GCService>();
-
+            builder.Services.AddAutoMapper(typeof(AppMappingProfile));
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -30,9 +32,9 @@ namespace ChesnokMessengerAPI
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            
             app.MapControllers();
-
+            
             app.UseMiddleware<ExceptionHandler>();
             app.UseMiddleware<ParamCheckMiddleware>();
 

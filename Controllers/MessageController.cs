@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net.WebSockets;
 using ChesnokMessengerAPI.WebSockets;
 using ChesnokMessengerAPI.Services;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ChesnokMessengerAPI.Controllers
 {
@@ -64,13 +65,58 @@ namespace ChesnokMessengerAPI.Controllers
             while(webSocket.State == WebSocketState.Open) { }
         }
         // Get latest messages
-        [HttpGet("get_messages")]
-        public IActionResult GetMessages(int userId, string token, int chatId, int firstMessageId, int amount)
+        [HttpGet("get_last_messages")]
+        public IActionResult GetLastMessages(int userId, string token, int chatId, int amount)
         {
             var context = new MessengerContext();
-            var messages = context.Messages.Where(i => i.Id >= firstMessageId && i.ChatId == chatId).ToArray().Take(amount);
+            var messages = context.Messages.Where(i => i.ChatId == chatId)
+                .ToArray()
+                .Reverse()
+                .Take(amount);
+
 
             return Ok(messages.ToJson());
+        }
+        [HttpGet("get_previous_messages")]
+        public IActionResult GetPreviousMessages(int userId, string token, int chatId, int messageId, int amount)
+        {
+            var context = new MessengerContext();
+            var messages = context.Messages.Where(i => i.Id < messageId && i.ChatId == chatId)
+                .ToArray()
+                .Reverse()
+                .Take(amount);
+                
+
+
+            return Ok(messages.ToJson());
+        }
+        [HttpPatch("edit_message")]
+        public IActionResult EditMessage(int userId, string token, int messageId, string text)
+        {
+            using(var context = new MessengerContext())
+            {
+                var message = context.Messages.FirstOrDefault(i => i.Id == messageId);
+
+                message.Text = text;
+
+                context.SaveChanges();
+            }
+
+            return Ok();
+        }
+        [HttpDelete("delete_message")]
+        public IActionResult DeleteMessage(int userId, string token, int messageId)
+        {
+            using (var context = new MessengerContext())
+            {
+                var message = context.Messages.FirstOrDefault(i => i.Id == messageId);
+
+                context.Remove(message);
+
+                context.SaveChanges();
+            }
+
+            return Ok();
         }
     }
 }
