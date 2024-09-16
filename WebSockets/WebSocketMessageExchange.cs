@@ -122,7 +122,6 @@ namespace ChesnokMessengerAPI.WebSockets
                 
             }
         }
-
         private async Task NotifyNewMessage()
         {
             using (var db = new NpgsqlConnection(DatabaseConnectionService.ConnectionString))
@@ -185,7 +184,6 @@ namespace ChesnokMessengerAPI.WebSockets
 
         }
     }
-
     public class TableNotification : Attribute
     {
         public string TableName;

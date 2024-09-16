@@ -45,7 +45,7 @@ namespace ChesnokMessengerAPI.Controllers
         // Subscribe to new messages with WebSocket
         [Route("ws_exchange_messages")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task ExchangeMessages(int userId, string token)
+        public async void ExchangeMessages(int userId, string token)
         {
             if (!HttpContext.WebSockets.IsWebSocketRequest)
             {
@@ -60,8 +60,11 @@ namespace ChesnokMessengerAPI.Controllers
             }
 
             var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-            var webSocketSession = new WebSocketMessageExchange(webSocket, user);
 
+            WebSocketService webSocketService = HttpContext.RequestServices.GetService<WebSocketService>();
+            
+            webSocketService.OpenNewConnection(user, webSocket);
+            
             while(webSocket.State == WebSocketState.Open) { }
         }
         // Get latest messages

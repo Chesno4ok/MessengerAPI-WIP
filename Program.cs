@@ -18,6 +18,7 @@ namespace ChesnokMessengerAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<GCService>();
+            builder.Services.AddSingleton<WebSocketService>(new WebSocketService());
             builder.Services.AddAutoMapper(typeof(AppMappingProfile));
             
             var app = builder.Build();

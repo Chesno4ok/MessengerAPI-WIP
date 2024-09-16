@@ -137,15 +137,18 @@ namespace ChesnokMessengerAPI.Controllers
 
             return Ok();
         }
-        [HttpPost("leave_group")]
+        [HttpPost("leave_chat")]
         public IActionResult LeaveGroup(int userId, string token, int chatId)
         {
             using(var context = new MessengerContext())
             {
                 var removedChatUser = context.ChatUsers.FirstOrDefault(i => i.ChatId == chatId && i.UserId == userId);
                 context.ChatUsers.Remove(removedChatUser);
+
+                context.SaveChanges();
             }
 
+            
             return Ok();
         }
     }
