@@ -9,6 +9,8 @@ using System.Net.WebSockets;
 using ChesnokMessengerAPI.WebSockets;
 using ChesnokMessengerAPI.Services;
 using static System.Net.Mime.MediaTypeNames;
+using AutoMapper;
+using ChesnokMessengerAPI.Templates;
 
 namespace ChesnokMessengerAPI.Controllers
 {
@@ -17,28 +19,28 @@ namespace ChesnokMessengerAPI.Controllers
     public class MessageController : ControllerBase
     {
         private readonly MessengerContext _context;
+        private readonly IMapper _mapper;
 
-        public MessageController()
+        public MessageController(IMapper mapper)
         {
+            _mapper = mapper;
             _context = new MessengerContext();
         }
         // Sene a message to the chat
         [HttpPost("send_text_message")]
-        public IActionResult SendTextMessage(int userId, string token, int chatId, string text)
+        public IActionResult SendTextMessage(MessageTemplate messageTemplate)
         {
-            using var _context = new MessengerContext();
+            using var context = new MessengerContext();
 
-            var message = new Message
-            {
-                ChatId = chatId,
-                User = userId,
-                Text = text,
-                Date = DateTimeOffset.UtcNow
-            };
+            if (messageTemplate.Id != null)
+                return BadRequest(new InvalidParametersResponse("Error", "Id must be null", new string[] { "Id" }));
 
-            _context.Messages.AddAsync(message);
+            var message = _mapper.Map<Message>(messageTemplate);
 
-            _context.SaveChanges();
+            context.Messages.AddAsync(message);
+
+            context.SaveChanges();
+            
             return Ok();
             
         }
@@ -84,12 +86,12 @@ namespace ChesnokMessengerAPI.Controllers
         public IActionResult GetPreviousMessages(int userId, string token, int chatId, int messageId, int amount)
         {
             var context = new MessengerContext();
+            
             var messages = context.Messages.Where(i => i.Id < messageId && i.ChatId == chatId)
                 .ToArray()
                 .Reverse()
                 .Take(amount);
                 
-
 
             return Ok(messages.ToJson());
         }

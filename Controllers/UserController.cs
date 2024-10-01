@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using ChesnokMessengerAPI.Responses;
+using ChesnokMessengerAPI.Services;
+using ChesnokMessengerAPI.Templates;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -24,60 +26,95 @@ namespace ChesnokMessengerAPI.Controllers
 
         // Get a user's name
         [HttpGet("get_user")]
-        public  IActionResult GetUser(int UserId)
+        public  IActionResult GetUser(int userId)
         {
             var _context = new MessengerContext();
-            var user = _context.Users.FirstOrDefault(i => i.Id == UserId);
+            var user = _context.Users
+                .Include(i => i.Token)
+                .FirstOrDefault(i => i.Id == userId);
 
             return Ok(user.ToJson());
         }
 
         // Get a user's token
         [HttpGet("get_token")]
-        public IActionResult GetToken(string login, string password)
+        public IActionResult GetToken(UserTemplate userTemplate)
         {
-            var _context = new MessengerContext();
-            var user = _context.Users.FirstOrDefault(i => i.Login == login && i.Password == password);
+            // Client validation
+            var context = new MessengerContext();
 
-            var userToken = _mapper.Map<UserCredentials>(user);
-            return Ok(userToken.ToJson());
+            if (userTemplate.Id != null)
+                return BadRequest(new InvalidParametersResponse("Error", "Id must be null", new string[] { "Id" }));
+
+            var user = context.Users.FirstOrDefault(i => i.Login == userTemplate.Login
+            && i.Password == userTemplate.Password);
+
+            if (user == null)
+                return BadRequest(new InvalidParametersResponse("Error", "Invalid Credentials", new string[] { "Login", "Password" }));
+
+
+            // Generating new token
+
+            var tokens = context.Tokens.Where(i => i.UserId == userTemplate.Id);
+
+            if(tokens.Count() != 0)
+            {
+                context.Tokens.RemoveRange(tokens);
+            }
+
+            var stringToken = TokenService.GenerateToken();
+            var tokenHash = TokenService.GenerateHash(new Guid(stringToken));
+
+            context.Tokens.Add(new Token()
+            {
+                UserId = (int)userTemplate.Id,
+                TokenHash = tokenHash
+            });
+
+            var userResponse = GetUser((int)userTemplate.Id);
+
+            return Ok(user.ToJson());
         }
 
         // Change user's name
-        [HttpPatch("change_username")]
-        public IActionResult ChangeUsername(int userId, string token, string username)
+        [HttpPut("edit_user")]
+        public IActionResult EditUser(int userId, UserTemplate userTemplate)
         {
-            var _context = new MessengerContext();
-            var user = _context.Users.FirstOrDefault(i => i.Id == userId);
-            user.Name = username;
+            var context = new MessengerContext();
 
-             _context.SaveChanges();
+            if (userTemplate.Id == null)
+                return BadRequest(new InvalidParametersResponse("Error", "Id cannot be null", new string[] {"Id"}));
 
-            var newUser = _mapper.Map<UserInfo>(user);
+            var newUser = context.Users.FirstOrDefault(i => i.Id == userTemplate.Id);
+
+            newUser = (User)_mapper.Map(userTemplate, newUser, typeof(UserTemplate), typeof(User));
+
+            context.SaveChanges();
+
             return Ok(newUser.ToJson());
         }
         [HttpPost("register_user")]
-        public async Task<IActionResult> RegisterUser(string name, string login, string password)
+        public async Task<IActionResult> RegisterUser(UserTemplate userTemplate)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(i => i.Login == login);
+            using var context = new MessengerContext();
 
-            if (user != null)
+            var user = _mapper.Map<User>(userTemplate);
+
+            context.Users.Add(user);
+
+            await context.SaveChangesAsync();
+
+
+            var stringToken = TokenService.GenerateToken();
+            var tokenHash = TokenService.GenerateHash(new Guid(stringToken));
+
+            context.Tokens.Add(new Token()
             {
-                return BadRequest(new Response("Error", "login already exists").ToJson());
-            }
+                UserId = user.Id,
+                TokenHash = tokenHash
+            });
 
-            user = new User()
-            {
-                Login = login,
-                Name = name,
-                Password = password,
-                Token = System.Guid.NewGuid().ToString()
-            };
-            await _context.Users.AddAsync(user);
-
-            await _context.SaveChangesAsync();
             return Ok(user.ToJson());
-
         }
         [HttpGet("check_login")]
         public IActionResult CheckUser(string login)
@@ -93,7 +130,6 @@ namespace ChesnokMessengerAPI.Controllers
         [HttpGet("search_user")]
         public IActionResult SearchUser(string username)
         {
-            
             User[] users;
             using (var context = new MessengerContext())
             {

@@ -11,7 +11,7 @@ public partial class Message
 
     public int ChatId { get; set; }
 
-    public DateTimeOffset Date { get; set; }
+    public DateTime Date { get; set; }
 
     public short IsRead { get; set; }
 

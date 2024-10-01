@@ -37,7 +37,7 @@ namespace ChesnokMessengerAPI
             app.MapControllers();
             
             app.UseMiddleware<ExceptionHandler>();
-            app.UseMiddleware<ParamCheckMiddleware>();
+            //app.UseMiddleware<ParamCheckMiddleware>();
 
             var webSocketOptions = new WebSocketOptions
             {

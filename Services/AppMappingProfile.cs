@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using ChesnokMessengerAPI.Templates;
 
 namespace ChesnokMessengerAPI.Services
 {
@@ -7,8 +8,9 @@ namespace ChesnokMessengerAPI.Services
     {
         public AppMappingProfile()
         {
-            CreateMap<User, UserInfo>();
-            CreateMap<User, UserCredentials>();
+            CreateMap<MessageTemplate, Message>();
+            CreateMap<ChatTemplate, Chat>();
+            CreateMap<ChatUserTemplate, ChatUser>();
         }
     }
 }

@@ -9,7 +9,27 @@ namespace ChesnokMessengerAPI.Services
 {
     public class WebSocketService
     {
-        public List<WebSocketSession> WebSocketSessions = new();
+        private List<WebSocketSession> webSocketSessions = new();
+        public List<WebSocketSession> WebSocketSessions
+        {
+            get
+            {
+                object locker = new();
+                lock (locker)
+                {
+                    return webSocketSessions;
+                }
+            }
+            set
+            {
+                object locker = new();
+                lock (locker)
+                {
+                    webSocketSessions = value;
+                }
+            }
+        }
+        private Timer clearSessionsTimer;
         public WebSocketService()
         {
             SubscribeToDbChanges();
@@ -17,16 +37,9 @@ namespace ChesnokMessengerAPI.Services
         public void OpenNewConnection(User user, WebSocket webSocket)
         {
             var webSocketSession = new WebSocketSession(webSocket, user);
-            webSocketSession.CloseConnectionEvent += CloseWebSocketConnection;
-
+            webSocketSession.CloseConnectionEvent += i => { i.Dispose(); WebSocketSessions.Remove(i); };
+            
             WebSocketSessions.Add(webSocketSession);
-        }
-
-        private void CloseWebSocketConnection(string SessionID)
-        {
-            var webSocketSession = WebSocketSessions.First(i => i.SessionID == SessionID);
-
-            WebSocketSessions.Remove(webSocketSession);
         }
 
         private async void SubscribeToDbChanges()
@@ -34,6 +47,8 @@ namespace ChesnokMessengerAPI.Services
             using (var db = new NpgsqlConnection(DatabaseConnectionService.ConnectionString))
             {
                 await db.OpenAsync();
+
+                db.StateChange += Db_StateChange;
 
                 db.Notification += OnDatabaseUpdate;
 
@@ -48,6 +63,12 @@ namespace ChesnokMessengerAPI.Services
                 await db.CloseAsync();
             }
         }
+
+        private void Db_StateChange(object sender, System.Data.StateChangeEventArgs e)
+        {
+            Console.WriteLine(e.CurrentState);
+        }
+
         private void OnDatabaseUpdate(object sender, NpgsqlNotificationEventArgs e)
         {
             var dbNotification = System.Text.Json.JsonSerializer.Deserialize<DbNotification<Message>>(e.Payload);
@@ -72,8 +93,10 @@ namespace ChesnokMessengerAPI.Services
         [TableNotification("Messages")]
         public void ProccessMessageUpdate(string payloadJson)
         {
+            var webSocketSessions = WebSocketSessions;
+            
             var message = System.Text.Json.JsonSerializer.Deserialize<DbNotification<Message>>(payloadJson);
-
+            
 
             using var dbContext = new MessengerContext();
 
@@ -83,7 +106,7 @@ namespace ChesnokMessengerAPI.Services
                         select p;
 
 
-            var sessions = from s in WebSocketSessions
+            var sessions = from s in webSocketSessions
                            join u in users on s.User.Id equals u.Id
                            select s;
                             

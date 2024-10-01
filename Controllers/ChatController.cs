@@ -4,6 +4,8 @@ using NuGet.Protocol;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using AutoMapper;
+using ChesnokMessengerAPI.Templates;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ChesnokMessengerAPI.Controllers
 {
@@ -21,134 +23,108 @@ namespace ChesnokMessengerAPI.Controllers
         }
         // Create a new chat with users
         [HttpPost("create_chat")]
-        public IActionResult CreateChat(int userId, string token, string chatName, int[] users)
+        public IActionResult CreateChat(ChatTemplate chatTemplate)
         {
-            var _context = new MessengerContext();
+            // Creating new chat
+            var context = new MessengerContext();
 
-            // TODO: Move this to ParamCheckMW
-            foreach(int i in users) // Checking incoming users
-            {
-                var user = _context.Users.FirstOrDefault(i => i.Id == userId);
+            if (chatTemplate.Id != null)
+                return BadRequest(new InvalidParametersResponse("Error", "Id must be null", new string[] { "Id" }));
 
-                if(user == null)
-                {
-                    return BadRequest(new Response("Error", "Invalid users"));
-                }
-            }
+            var newChat = _mapper.Map<Chat>(chatTemplate);
 
-            var chat = new Chat() { ChatName = chatName };
-            _context.Chats.Add(chat);
-            _context.SaveChanges();
-            
-            if(!users.Any(i => i == userId))
-                _context.ChatUsers.Add(new ChatUser() { ChatId = chat.Id, UserId = userId });
+            context.Add(newChat);
 
-            foreach (int i in users)
-            {
-                _context.ChatUsers.Add(new ChatUser() { ChatId = chat.Id, UserId = i });
-            }
-            
-            _context.SaveChanges();
+            context.SaveChanges();
+
+            // Adding chatUsers to chat
+            // TODO: Проверить, валидируються ли так указанные пользователи
+            ChatUser[] chatUsers = _mapper.Map<ChatUser[]>(chatTemplate.ChatUsers);
+
+            context.ChatUsers.AddRange(chatUsers);
+            context.SaveChanges();
+
             return Ok();
         }
         // Add users to the chat
+#warning
+        // TODO: Проверить, является ли добавляющий пользователя участник, участником чата
         [HttpPost("add_user")]
-        public IActionResult AddUser(int userId, int chatId, string token, int[] users)
+        public IActionResult AddUser(ChatUserTemplate chatUserTemplate)
         {
-            var _context = new MessengerContext();
-            if (users.Any(i => _context.Users.FirstOrDefault(x => x.Id == i) == null))
-            {
-                return BadRequest(new Response("Error", "One of the users is incorrect"));
-            }
+            var context = new MessengerContext();
 
-            foreach (var i in users)
-            {
-                _context.ChatUsers.Add(new ChatUser() { ChatId = chatId, UserId = i });
-            }
+            if (chatUserTemplate.Id != null)
+                return BadRequest(new InvalidParametersResponse("Error", "Id must be null", new string[] { "Id" }));
 
-            _context.SaveChanges();
+            var chatUser = _mapper.Map<ChatUser>(chatUserTemplate);
+            context.ChatUsers.Add(chatUser);
+
+            context.SaveChanges();
             return Ok();
         }
         // Get all chats that user is part of
         [HttpGet("get_chats")]
-        public IActionResult GetChats(int userId, string token)
+        public IActionResult GetChats(int userId)
         {
-            var _context = new MessengerContext();
-            Chat[] chats = _context.Chats.Where(x => _context.ChatUsers.Where(i => i.UserId == userId).Any(y => y.ChatId == x.Id)).ToArray();
+            var context = new MessengerContext();
+            Chat[] chats = context.ChatUsers.Where(i => i.UserId == userId).Include(i => i.Chat).Select(i => i.Chat).ToArray();
 
             return Ok(chats.ToJson());
         }
         // Get certain chat
         [HttpGet("get_chat")]
-        public  IActionResult GetChat(int userId, string token, int chatId)
+        public  IActionResult GetChat(int chatId)
         {
-            var _context = new MessengerContext();
-            var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId);
+            var context = new MessengerContext();
+            var chat = context.Chats.FirstOrDefault(i => i.Id == chatId);
 
             return Ok(chat.ToJson());
         }
-        // Get certain chat
-        [HttpGet("get_chat_amount")]
-        public IActionResult GetChatAmount(int userId, string token, int chatId)
-        {
-            var _context = new MessengerContext();
-            var chat = _context.Chats.FirstOrDefault(i => i.Id == chatId);
-            
-            
 
-            return Ok(chat.ToJson());
-        }
         [HttpGet("get_users")]
-        public IActionResult GetUsers(int userId, string token, int chatId)
+        public IActionResult GetUsers(int chatId)
         {
-            var _context = new MessengerContext();
-            var users = _context.Users.Where(user => _context.ChatUsers.Where(chat => chat.ChatId == chatId).Any(i => i.UserId == user.Id)).ToArray();
+            var context = new MessengerContext();
 
-            List<UserInfo> userInfos = new List<UserInfo>();
-            foreach (var i in users)
-            {
-                userInfos.Add(_mapper.Map<UserInfo>(i));
-            }
+            var users = context.ChatUsers.Where(i => i.ChatId == chatId).Include(i => i.User).Select(i => i.User);
 
-            return Ok(userInfos.ToJson());
+            return Ok(users.ToJson());
         }
-        [HttpPatch("update_users")]
-        public IActionResult UpdateUsers(int userId, string token,int chatId, int[] users)
+        [HttpPost("update_chat")]
+        public IActionResult UpdateUsers(ChatTemplate chatTemplate)
         {
-            using(var context = new MessengerContext())
+            using var context = new MessengerContext();
+
+            if (chatTemplate.Id == null)
+                return BadRequest(new InvalidParametersResponse("Error", "Id cannot be null", new string[] { "Id" }));
+
+            var chat = context.Chats.FirstOrDefault(i => i.Id == chatTemplate.Id);
+
+            chat = (Chat)_mapper.Map(chatTemplate, chat, typeof(ChatTemplate), typeof(Chat));
+
+            var deletedChatUsers = context.ChatUsers.Where(i => i.ChatId == chat.Id);
+
+            if(deletedChatUsers.Count() != 0)
             {
-                var chatUsers = context.ChatUsers.Where(i => i.ChatId == chatId);
-
-                context.ChatUsers.RemoveRange(chatUsers);
-
-                var newUsers = context.Users.Where(u => users.Any(i => i == u.Id));
-
-                foreach(var user in newUsers)
-                {
-                    context.Add(new ChatUser()
-                    {
-                        ChatId = chatId,
-                        UserId = user.Id
-                    });
-                }
-
-                context.SaveChanges();
+                context.ChatUsers.RemoveRange(deletedChatUsers);
             }
+
+            ChatUser[] newChatUsers = _mapper.Map<ChatUser[]>(chatTemplate.ChatUsers);
 
             return Ok();
         }
         [HttpPost("leave_chat")]
-        public IActionResult LeaveGroup(int userId, string token, int chatId)
+        public IActionResult LeaveGroup(int userId, int chatId)
         {
-            using(var context = new MessengerContext())
-            {
-                var removedChatUser = context.ChatUsers.FirstOrDefault(i => i.ChatId == chatId && i.UserId == userId);
-                context.ChatUsers.Remove(removedChatUser);
+            using var context = new MessengerContext();
 
-                context.SaveChanges();
-            }
+            var removedChatUser = context.ChatUsers.FirstOrDefault(i => i.ChatId == chatId && i.UserId == userId);
+            context.ChatUsers.Remove(removedChatUser);
 
-            
+            context.SaveChanges();
+
+
             return Ok();
         }
     }

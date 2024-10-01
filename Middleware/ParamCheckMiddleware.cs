@@ -28,25 +28,36 @@ namespace ChesnokMessengerAPI.Middleware
             _query = context.Request.Query.ToDictionary(i => i.Key, i => i.Value.ToString());
             _httpContext = context;
 
-            MethodInfo[] methods = GetType().GetMethods();
+            //MethodInfo[] methods = GetType().GetMethods();
 
             bool result = true;
             List<string> invalidParameters = new();
 
+            var methods = GetType().GetMethods()
+                 .Where(i => i.GetCustomAttribute<ParameterValidation>() != null)
+                 .Where(i => i.GetCustomAttribute<ParameterValidation>().parameters.All(i => _query.ContainsKey(i)));
+                    
+                
+
+
             foreach(var m in methods)
             {
-                object[] attributes = m.GetCustomAttributes(typeof(ParameterValidation), false).ToArray();
+                result = (bool)m.Invoke(this, new object[1] { _query });
+                if (!result)
+                    invalidParameters.AddRange(m.GetCustomAttribute<ParameterValidation>().parameters);
 
-                foreach(ParameterValidation a in attributes)
-                {
-                    if (a.parameters.All(i => _query.ContainsKey(i)))
-                    {
-                        result = (bool)m.Invoke(this, new object[1] {_query});
+                //object[] attributes = m.GetCustomAttributes(typeof(ParameterValidation), false).ToArray();
 
-                        if(!result)
-                            invalidParameters.AddRange(a.parameters);
-                    }
-                }
+                //foreach(ParameterValidation a in attributes)
+                //{
+                //    if (a.parameters.All(i => _query.ContainsKey(i)))
+                //    {
+                //        result = (bool)m.Invoke(this, new object[1] {_query});
+
+                //        if(!result)
+                //            invalidParameters.AddRange(a.parameters);
+                //    }
+                //}
 
             }
 

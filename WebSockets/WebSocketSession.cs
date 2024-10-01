@@ -1,28 +1,37 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 
 namespace ChesnokMessengerAPI.WebSockets
 {
-    public class WebSocketSession
+    public class WebSocketSession : IDisposable
     {
-        public string SessionID;
         public User User;
-        private WebSocket webSocket;
-        public delegate void CloseConnection(string SessionID);
+        public WebSocket WebSocket;
+        public delegate void CloseConnection(WebSocketSession session);
         public event CloseConnection CloseConnectionEvent;
+        private CancellationTokenSource cancellationTokenSource = new();
 
         public WebSocketSession(WebSocket webSocket, User user)
         {
-            this.webSocket = webSocket;
+            this.WebSocket = webSocket;
             this.User = user;
-            this.SessionID = System.Guid.NewGuid().ToString();
             StartExchange();
         }
+
+        public void Dispose()
+        {
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
+            WebSocket.Dispose();
+        }
+
         private async void StartExchange()
         {
-            Task.Run(() => ReceiveMessage());
+            CancellationToken ct = cancellationTokenSource.Token;
+            Task.Run(() => ReceiveMessage(), ct);
         }
         private async Task ReceiveMessage()
         {
@@ -30,22 +39,18 @@ namespace ChesnokMessengerAPI.WebSockets
 
             string messageJson = "";
 
-            while (webSocket.State == WebSocketState.Open)
+            while (WebSocket.State == WebSocketState.Open)
             {
                 try
                 {
-                    var receiveResult = webSocket.ReceiveAsync(
+                    CancellationToken ct = cancellationTokenSource.Token;
+                    var receiveResult = WebSocket.ReceiveAsync(
                         receiveBuffer,
-                        CancellationToken.None).Result;
+                        ct).Result;
                 }
                 catch
                 {
-                    await webSocket.CloseAsync(
-                        WebSocketCloseStatus.ProtocolError,
-                        "Connection timed out",
-                        CancellationToken.None);
-
-                    CloseConnectionEvent.Invoke(SessionID);
+                    CloseConnectionEvent.Invoke(this);
 
                     break;
                 }
@@ -66,26 +71,30 @@ namespace ChesnokMessengerAPI.WebSockets
         public void SendMessage(string message)
         {
             byte[]? sendBuffer = new byte[1024 * 4];
-            if (webSocket.State == WebSocketState.Open)
+            if (WebSocket.State == WebSocketState.Open)
             {
 
                 sendBuffer = Encoding.UTF8.GetBytes(message);
 
                 try
                 {
-                    webSocket.SendAsync(sendBuffer,
+                    WebSocket.SendAsync(sendBuffer,
                     WebSocketMessageType.Text,
                     true,
                     CancellationToken.None);
                 }
                 catch
                 {
-                    webSocket.CloseAsync(
+                    WebSocket.CloseAsync(
                         WebSocketCloseStatus.ProtocolError,
                         "Connection timed out",
                         CancellationToken.None);
-                    CloseConnectionEvent.Invoke(SessionID);
+                    CloseConnectionEvent.Invoke(this);
                 }
+            }
+            else
+            {
+                CloseConnectionEvent.Invoke(this);
             }
         }
 
@@ -144,5 +153,6 @@ namespace ChesnokMessengerAPI.WebSockets
             }
         }
 
+       
     }
 }
