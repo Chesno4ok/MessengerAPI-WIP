@@ -23,7 +23,7 @@ namespace ChesnokMessengerAPI.Templates
             using var dbContext = new MessengerContext();
 
             if (dbContext.Users.FirstOrDefault(i => i.Id == Id) == null && Id != null)
-                yield return new ValidationResult("Message not found");
+                yield return new ValidationResult("User not found", new string[] {"Id"});
         }
     }
 }

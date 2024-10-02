@@ -11,6 +11,7 @@ namespace ChesnokMessengerAPI.Services
             CreateMap<MessageTemplate, Message>();
             CreateMap<ChatTemplate, Chat>();
             CreateMap<ChatUserTemplate, ChatUser>();
+            CreateMap<UserTemplate, User>();
         }
     }
 }

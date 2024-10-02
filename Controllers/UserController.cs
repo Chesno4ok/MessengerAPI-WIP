@@ -30,14 +30,13 @@ namespace ChesnokMessengerAPI.Controllers
         {
             var _context = new MessengerContext();
             var user = _context.Users
-                .Include(i => i.Token)
                 .FirstOrDefault(i => i.Id == userId);
 
             return Ok(user.ToJson());
         }
 
         // Get a user's token
-        [HttpGet("get_token")]
+        [HttpPost("get_token")]
         public IActionResult GetToken(UserTemplate userTemplate)
         {
             // Client validation
@@ -78,7 +77,7 @@ namespace ChesnokMessengerAPI.Controllers
 
         // Change user's name
         [HttpPut("edit_user")]
-        public IActionResult EditUser(int userId, UserTemplate userTemplate)
+        public IActionResult EditUser( UserTemplate userTemplate)
         {
             var context = new MessengerContext();
 
@@ -97,6 +96,9 @@ namespace ChesnokMessengerAPI.Controllers
         public async Task<IActionResult> RegisterUser(UserTemplate userTemplate)
         {
             using var context = new MessengerContext();
+
+            if(userTemplate.Id != null)
+                return BadRequest(new InvalidParametersResponse("Error", "Id must be null", new string[] { "Id" }));
 
             var user = _mapper.Map<User>(userTemplate);
 

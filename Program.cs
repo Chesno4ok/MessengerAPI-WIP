@@ -17,8 +17,6 @@ namespace ChesnokMessengerAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddSingleton<GCService>();
-            builder.Services.AddSingleton<WebSocketService>(new WebSocketService());
             builder.Services.AddAutoMapper(typeof(AppMappingProfile));
             
             var app = builder.Build();
@@ -36,8 +34,7 @@ namespace ChesnokMessengerAPI
             
             app.MapControllers();
             
-            app.UseMiddleware<ExceptionHandler>();
-            //app.UseMiddleware<ParamCheckMiddleware>();
+            app.UseMiddleware<ParamCheckMiddleware>();
 
             var webSocketOptions = new WebSocketOptions
             {

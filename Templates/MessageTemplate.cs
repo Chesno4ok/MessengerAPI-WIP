@@ -16,8 +16,6 @@ namespace ChesnokMessengerAPI.Templates
         [Required]
         [StringLength(maximumLength:100, MinimumLength = 1)]
         public string? Text { get; set; }
-
-        public virtual User UserNavigation { get; set; } = null!;
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             using var dbContext = new MessengerContext();

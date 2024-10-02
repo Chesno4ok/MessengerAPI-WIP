@@ -17,9 +17,6 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
-    [JsonProperty]
-    public string Token { get; set; } = null!;
-
     public virtual ICollection<ChatUser> ChatUsers { get; set; } = new List<ChatUser>();
 
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();

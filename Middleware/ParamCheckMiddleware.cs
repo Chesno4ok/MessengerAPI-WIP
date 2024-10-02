@@ -111,19 +111,6 @@ namespace ChesnokMessengerAPI.Middleware
             return chat != null;
         }
 
-        [ParameterValidation("userId","token")]
-        public bool Validate_UserId_Token(Dictionary<string, string> _query)
-        {
-            var _dbContext = new MessengerContext();
-
-            int UserId = Convert.ToInt32(_query["userId"]);
-            string token = _query["token"];
-
-            var user =  _dbContext.Users.FirstOrDefault(i => i.Id == UserId && i.Token == token);
-
-            return user != null;
-        }
-
         [ParameterValidation("type")]
         public bool Validate_Type(Dictionary<string, string> _query)
         {
