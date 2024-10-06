@@ -9,6 +9,7 @@ namespace ChesnokMessengerAPI.Services
         public AppMappingProfile()
         {
             CreateMap<MessageTemplate, Message>();
+            CreateMap<EditMessageTemplate, Message>();
             CreateMap<ChatTemplate, Chat>();
             CreateMap<ChatUserTemplate, ChatUser>();
             CreateMap<UserTemplate, User>();

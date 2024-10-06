@@ -1,17 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace ChesnokMessengerAPI.Templates
 {
     public class MessageTemplate : IValidatableObject
     {
-        [Display]
-        public int? Id { get; set; }
+        [Required]
+        public int? UserId { get; set; }
 
         [Required]
-        public int User { get; set; }
-
-        [Required]
-        public int ChatId { get; set; }
+        public int? ChatId { get; set; }
 
         [Required]
         [StringLength(maximumLength:100, MinimumLength = 1)]
@@ -20,12 +18,12 @@ namespace ChesnokMessengerAPI.Templates
         {
             using var dbContext = new MessengerContext();
 
-            if (dbContext.Messages.FirstOrDefault(i => i.Id == Id) == null && Id != null)
-                yield return new ValidationResult("Message not found");
-            if (dbContext.Users.FirstOrDefault(i => i.Id == User) == null)
+            if (dbContext.Users.FirstOrDefault(i => i.Id == UserId) == null)
                 yield return new ValidationResult("User not found", new string[] { "User" });
-            if (dbContext.Chats.FirstOrDefault(i => i.Id == ChatId) == null && Id != null)
-                yield return new ValidationResult("Id not found", new string[] { "Id" });
+            if (dbContext.Chats.FirstOrDefault(i => i.Id == ChatId) == null)
+                yield return new ValidationResult("Chat not found", new string[] { "ChatId" });
+            if (dbContext.ChatUsers.FirstOrDefault(i => i.UserId == UserId && i.ChatId == ChatId) == null)
+                yield return new ValidationResult("User is not participant of the chat", new string[] {"ChatId" });
 
         }
     }

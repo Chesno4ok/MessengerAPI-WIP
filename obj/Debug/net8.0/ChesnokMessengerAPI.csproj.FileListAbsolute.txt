@@ -239,8 +239,6 @@ C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\ChesnokMessengerAPI.csproj.CoreCompileInputs.cache
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\ChesnokMessengerAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\ChesnokMessengerAPI.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\ChesnokMessengerAPI.RazorAssemblyInfo.cache
-C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\ChesnokMessengerAPI.RazorAssemblyInfo.cs
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\ChesnokMessengerAPI.sourcelink.json
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\obj\Debug\net8.0\staticwebassets.development.json
@@ -516,3 +514,4 @@ C:\Users\chesn\Desktop\Messenger\ChesnokMessengerAPI\obj\Debug\net8.0\scopedcss\
 C:\Users\chesn\Desktop\Messenger\ChesnokMessengerAPI\obj\Debug\net8.0\ChesnokMessengerAPI.csproj.CopyComplete
 C:\Users\chesn\Desktop\Messenger\ChesnokMessengerAPI\obj\Debug\net8.0\ChesnokMessengerAPI.genruntimeconfig.cache
 C:\Users\chesn\Desktop\Messenger\ChesnokMessengerAPI\obj\Debug\net8.0\ref\ChesnokMessengerAPI.dll
+C:\Users\chesn\YandexDisk\repos\123\ChesnokMessengerAPI\ChesnokMessengerAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

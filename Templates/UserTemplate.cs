@@ -1,13 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ChesnokMessengerAPI.Controllers;
+using ChesnokMessengerAPI.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChesnokMessengerAPI.Templates
 {
     public class UserTemplate : IValidatableObject
     {
-        [Display]
-        public int? Id { get; set; }
         [Required]
         [StringLength(16, MinimumLength = 3)]
         public string Name { get; set; } = null!;
@@ -21,9 +22,9 @@ namespace ChesnokMessengerAPI.Templates
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             using var dbContext = new MessengerContext();
-
-            if (dbContext.Users.FirstOrDefault(i => i.Id == Id) == null && Id != null)
-                yield return new ValidationResult("User not found", new string[] {"Id"});
+            
+            if(dbContext.Users.FirstOrDefault(i => i.LoginHash == TokenService.GenerateHash(Login)) != null)
+                yield return new ValidationResult("Login already exists", new string[] { "Login" });
         }
     }
 }

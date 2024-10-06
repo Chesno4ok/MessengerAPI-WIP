@@ -1,4 +1,5 @@
-﻿using ChesnokMessengerAPI.Responses;
+﻿using Azure.Core;
+using ChesnokMessengerAPI.Responses;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Common;
@@ -23,10 +24,12 @@ namespace ChesnokMessengerAPI.Middleware
         }
 
         // Check all for parameters correction in http requests
-        public Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
+            
             _query = context.Request.Query.ToDictionary(i => i.Key, i => i.Value.ToString());
             _httpContext = context;
+
 
             //MethodInfo[] methods = GetType().GetMethods();
 
@@ -62,11 +65,10 @@ namespace ChesnokMessengerAPI.Middleware
             }
 
             if (invalidParameters.Count == 0)
-                _next.Invoke(context);
+                await _next.Invoke(context);
             else
                 SendBadRequst(context, "Invalid parameters", invalidParameters.ToArray());
 
-            return Task.CompletedTask;
         }
 
         private void SendBadRequst(HttpContext context, string reason, string[] parameters)
@@ -128,19 +130,6 @@ namespace ChesnokMessengerAPI.Middleware
             return bytes.Length < 2048;
         }
 
-        [ParameterValidation("login","password")]
-        public bool Validate_Login_Password(Dictionary<string, string> _query)
-        {
-            var _dbContext = new MessengerContext();
-
-            if (_httpContext.Request.Method == "POST")
-                return true;
-
-            var user = _dbContext.Users.FirstOrDefault(i => i.Login == _query["login"] && i.Password == _query["password"]);
-
-            return user != null;
-        }
-
         [ParameterValidation("messageId")]
         public bool Validate_Message(Dictionary<string, string> _query)
         {
@@ -151,15 +140,6 @@ namespace ChesnokMessengerAPI.Middleware
             return messages != null;
         }
 
-        [ParameterValidation("userId","messageId")]
-        public bool Validate_User_Message(Dictionary<string, string> _query)
-        {
-            using var dbContext = new MessengerContext();
-
-            var messages = dbContext.Messages.FirstOrDefault(i => i.Id == Convert.ToInt32(_query["messageId"]) && i.User == Convert.ToInt32(_query["userId"]));
-
-            return messages != null;
-        }
     }
 
     [AttributeUsage(AttributeTargets.Method)]

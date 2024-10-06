@@ -106,7 +106,7 @@ namespace ChesnokMessengerAPI.WebSockets
         private void SaveNewMessage(Message message)
         {
             message.Date = DateTime.UtcNow;
-            message.User = user.Id;
+            message.UserId = user.Id;
 
             using (var db = new MessengerContext())
             {

@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChesnokMessengerAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ec225ea2044326367546dbcee3fa5d1c3485fede")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+610d7c1aac8e59e1f487513db1fcb3c333db620d")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChesnokMessengerAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChesnokMessengerAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

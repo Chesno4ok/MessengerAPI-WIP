@@ -11,11 +11,13 @@ using ChesnokMessengerAPI.Services;
 using static System.Net.Mime.MediaTypeNames;
 using AutoMapper;
 using ChesnokMessengerAPI.Templates;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChesnokMessengerAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class MessageController : ControllerBase
     {
         private readonly MessengerContext _context;
@@ -32,16 +34,14 @@ namespace ChesnokMessengerAPI.Controllers
         {
             using var context = new MessengerContext();
 
-            if (messageTemplate.Id != null)
-                return BadRequest(new InvalidParametersResponse("Error", "Id must be null", new string[] { "Id" }));
-
             var message = _mapper.Map<Message>(messageTemplate);
+            message.Date = DateTime.UtcNow;
 
             context.Messages.AddAsync(message);
 
             context.SaveChanges();
             
-            return Ok();
+            return Ok(message.ToJson());
             
         }
         // Get latest messages
@@ -70,13 +70,10 @@ namespace ChesnokMessengerAPI.Controllers
 
             return Ok(messages.ToJson());
         }
-        [HttpPatch("edit_message")]
-        public IActionResult EditMessage(int messageId, MessageTemplate messageTemplate)
+        [HttpPut("edit_message")]
+        public IActionResult EditMessage(EditMessageTemplate messageTemplate)
         {
             using var context = new MessengerContext();
-
-            if(messageTemplate.Id == null)
-                return BadRequest(new InvalidParametersResponse("Error", "Id cannot be null", new string[] { "Id" }));
 
             var newMessage = context.Messages.FirstOrDefault(i => i.Id == messageTemplate.Id);
 
@@ -84,7 +81,7 @@ namespace ChesnokMessengerAPI.Controllers
 
             context.SaveChanges();
 
-            return Ok();
+            return Ok(newMessage.ToJson());
         }
         [HttpDelete("delete_message")]
         public IActionResult DeleteMessage(int messageId)

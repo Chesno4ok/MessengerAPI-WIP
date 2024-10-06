@@ -67,19 +67,22 @@ public partial class MessengerContext : DbContext
             entity.Property(e => e.Date).HasPrecision(3);
             entity.Property(e => e.IsRead).HasDefaultValue((short)0);
 
-            entity.HasOne(d => d.UserNavigation).WithMany(p => p.Messages)
-                .HasForeignKey(d => d.User)
+            entity.HasOne(d => d.Chat).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.ChatId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_chatId");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_users");
         });
 
         modelBuilder.Entity<Token>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => e.Id).HasName("Tokens_pkey");
 
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.HasOne(d => d.User).WithMany()
+            entity.HasOne(d => d.User).WithMany(p => p.Tokens)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("User_FK");

@@ -6,11 +6,13 @@ using System.Text.RegularExpressions;
 using AutoMapper;
 using ChesnokMessengerAPI.Templates;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChesnokMessengerAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class ChatController : ControllerBase
     {
         private readonly MessengerContext _context;
@@ -21,6 +23,13 @@ namespace ChesnokMessengerAPI.Controllers
             _mapper = mapper;
             _context = new MessengerContext();
         }
+
+        [HttpPost]
+        public IActionResult Zhopa()
+        {
+            return Ok();
+        }
+
         // Create a new chat with users
         [HttpPost("create_chat")]
         public IActionResult CreateChat(ChatTemplate chatTemplate)
@@ -28,17 +37,12 @@ namespace ChesnokMessengerAPI.Controllers
             // Creating new chat
             var context = new MessengerContext();
 
-            if (chatTemplate.Id != null)
-                return BadRequest(new InvalidParametersResponse("Error", "Id must be null", new string[] { "Id" }));
-
             var newChat = _mapper.Map<Chat>(chatTemplate);
 
             context.Add(newChat);
 
             context.SaveChanges();
 
-            // Adding chatUsers to chat
-            // TODO: Проверить, валидируються ли так указанные пользователи
             ChatUser[] chatUsers = _mapper.Map<ChatUser[]>(chatTemplate.ChatUsers);
 
             context.ChatUsers.AddRange(chatUsers);
@@ -46,16 +50,10 @@ namespace ChesnokMessengerAPI.Controllers
 
             return Ok();
         }
-        // Add users to the chat
-#warning
-        // TODO: Проверить, является ли добавляющий пользователя участник, участником чата
         [HttpPost("add_user")]
         public IActionResult AddUser(ChatUserTemplate chatUserTemplate)
         {
             var context = new MessengerContext();
-
-            if (chatUserTemplate.Id != null)
-                return BadRequest(new InvalidParametersResponse("Error", "Id must be null", new string[] { "Id" }));
 
             var chatUser = _mapper.Map<ChatUser>(chatUserTemplate);
             context.ChatUsers.Add(chatUser);
@@ -91,13 +89,10 @@ namespace ChesnokMessengerAPI.Controllers
 
             return Ok(users.ToJson());
         }
-        [HttpPost("update_chat")]
-        public IActionResult UpdateUsers(ChatTemplate chatTemplate)
+        [HttpPost("edit_chat")]
+        public IActionResult EditChat(EditChatTemplate chatTemplate)
         {
             using var context = new MessengerContext();
-
-            if (chatTemplate.Id == null)
-                return BadRequest(new InvalidParametersResponse("Error", "Id cannot be null", new string[] { "Id" }));
 
             var chat = context.Chats.FirstOrDefault(i => i.Id == chatTemplate.Id);
 
