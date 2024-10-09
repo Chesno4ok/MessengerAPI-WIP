@@ -67,9 +67,12 @@ namespace ChesnokMessengerAPI.Controllers
                     expires: DateTime.UtcNow.Add(TimeSpan.FromDays(1)), 
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
+            string token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
+            var userResponse = _mapper.Map<UserCredentials>(user);
+            userResponse.Token = token;
 
-            return Ok(new JwtSecurityTokenHandler().WriteToken(jwt).ToJson());
+            return Ok(userResponse.ToJson());
         }
 
         // Get a user's token

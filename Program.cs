@@ -93,7 +93,7 @@ namespace ChesnokMessengerAPI
 
             var app = builder.Build();
 
-            app.UseMiddleware<FooMiddleware>();
+            app.UseMiddleware<ParamCheckMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

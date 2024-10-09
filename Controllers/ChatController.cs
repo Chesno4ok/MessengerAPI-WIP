@@ -23,13 +23,6 @@ namespace ChesnokMessengerAPI.Controllers
             _mapper = mapper;
             _context = new MessengerContext();
         }
-
-        [HttpPost]
-        public IActionResult Zhopa()
-        {
-            return Ok();
-        }
-
         // Create a new chat with users
         [HttpPost("create_chat")]
         public IActionResult CreateChat(ChatTemplate chatTemplate)
@@ -66,7 +59,7 @@ namespace ChesnokMessengerAPI.Controllers
         public IActionResult GetChats(int userId)
         {
             var context = new MessengerContext();
-            Chat[] chats = context.ChatUsers.Where(i => i.UserId == userId).Include(i => i.Chat).Select(i => i.Chat).ToArray();
+            Chat[] chats = context.ChatUsers.Where(i => i.UserId == userId).Include(i => i.Chat.ChatUsers).Select(i => i.Chat).ToArray();
 
             return Ok(chats.ToJson());
         }
@@ -75,7 +68,7 @@ namespace ChesnokMessengerAPI.Controllers
         public  IActionResult GetChat(int chatId)
         {
             var context = new MessengerContext();
-            var chat = context.Chats.FirstOrDefault(i => i.Id == chatId);
+            var chat = context.Chats.Include(i => i.ChatUsers).FirstOrDefault(i => i.Id == chatId);
 
             return Ok(chat.ToJson());
         }
@@ -107,6 +100,9 @@ namespace ChesnokMessengerAPI.Controllers
 
             ChatUser[] newChatUsers = _mapper.Map<ChatUser[]>(chatTemplate.ChatUsers);
 
+            context.ChatUsers.AddRange(newChatUsers);
+
+            context.SaveChanges();
             return Ok();
         }
         [HttpPost("leave_chat")]

@@ -3,6 +3,9 @@ using ChesnokMessengerAPI.Services;
 using ChesnokMessengerAPI.Templates;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 
@@ -11,9 +14,28 @@ namespace ChesnokMessengerAPI.SignalR
     [Authorize]
     public class ChatHub : Hub
     {
-        private IMapper _mapper;
-        private List<ClientGroup> _clientGroups;
-        public ChatHub()
+        private IMapper _mapper { get; set; }
+        static object locker = new object();
+        private static List<ClientGroup> _cg = new();
+        private static List<ClientGroup> _clientGroups
+        {
+            get
+            {
+                lock (locker)
+                {
+                    return _cg;
+                }
+            }
+            set
+            {
+                lock (locker)
+                {
+                    _cg = value;
+                }
+            }
+
+        } 
+       public ChatHub()
         {
             var mapperConfig = new MapperConfiguration(mc =>
             {
@@ -21,7 +43,6 @@ namespace ChesnokMessengerAPI.SignalR
             });
 
             _mapper = mapperConfig.CreateMapper();
-            _clientGroups = new();
             
         }
         [Authorize]
@@ -36,18 +57,21 @@ namespace ChesnokMessengerAPI.SignalR
 
             int userId = Int32.Parse(IdClaim.Value);
 
-            Clients.Groups(messageTemplate.ChatId.ToString()).SendAsync("ReceiveMessage", messageTemplate);
+            var newMessage = _mapper.Map<Message>(messageTemplate);
+            newMessage.Date = DateTime.UtcNow;
 
-            dbContext.Messages.Add(_mapper.Map<Message>(messageTemplate));
+            dbContext.Messages.Add(newMessage);
+            await dbContext.SaveChangesAsync();
+
+            Clients.Groups(messageTemplate.ChatId.ToString()).SendAsync("ReceiveMessage", newMessage);
         }
         [Authorize]
-        public async Task SendMessageEdit(EditMessageTemplate messageTemplate)
+        public async Task EditMessage(EditMessageTemplate messageTemplate)
         {
             using var dbContext = new MessengerContext();
 
             var editMessage = dbContext.Messages.FirstOrDefault(i => i.Id == messageTemplate.Id)!;
             editMessage.Text = messageTemplate.Text;
-
 
             Claim? IdClaim = Context.User!.Claims.FirstOrDefault(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/authentication");
 
@@ -73,58 +97,104 @@ namespace ChesnokMessengerAPI.SignalR
 
             var newChat = _mapper.Map<Chat>(chatTemplate);
             dbContext.Chats.Add(newChat);
-            ChatUser[] chatUsers = _mapper.Map<ChatUser[]>(chatTemplate.ChatUsers);
-            dbContext.ChatUsers.AddRange(chatUsers);
             await dbContext.SaveChangesAsync();
 
-            AddUsersToGroups(chatUsers);
+            ChatUser[] chatUsers = _mapper.Map<ChatUser[]>(chatTemplate.ChatUsers);
+            foreach(var chat in chatUsers)
+            {
+                chat.ChatId = newChat.Id;
+            }
+
+            await dbContext.SaveChangesAsync();
+
+            await AddUsersToGroups(chatUsers, newChat.Id.ToString());
+
+            var chatResponse = _mapper.Map<ChatResponse>(newChat);
+            Clients.Groups(newChat.Id.ToString()).SendAsync("ReceiveChat", chatResponse);
         }
-        private async Task AddUsersToGroups(IEnumerable<ChatUser> chatUsers)
+        [Authorize]
+        public async Task EditChat(EditChatTemplate chatTemplate)
+        {
+            // Editing chat
+            using var dbContext = new MessengerContext();
+
+            var chat = dbContext.Chats.FirstOrDefault(i => i.Id == chatTemplate.Id);
+
+            chat = (Chat)_mapper.Map(chatTemplate, chat, typeof(EditChatTemplate), typeof(Chat));
+
+            var deletedChatUsers = dbContext.ChatUsers.Where(i => i.ChatId == chat.Id);
+
+            if (deletedChatUsers.Count() != 0)
+            {
+                dbContext.ChatUsers.RemoveRange(deletedChatUsers);
+            }
+
+            ChatUser[] newChatUsers = _mapper.Map<ChatUser[]>(chatTemplate.ChatUsers);
+
+            await dbContext.SaveChangesAsync();
+
+            // Editing groups
+
+            var newChat = dbContext.Chats.Include(i => i.ChatUsers).FirstOrDefault(i => i.Id == chatTemplate.Id);
+            await AddUsersToGroups(newChat.ChatUsers, chat.Id.ToString());
+
+
+            await Clients.Groups(chatTemplate.Id.ToString()).SendAsync("ReceiveChat", _mapper.Map<ChatResponse>(newChat));
+
+        }
+        [Authorize]
+        public async Task LeaveChat(int chatId)
         {
             using var dbContext = new MessengerContext();
-            var chatId = chatUsers.First().ChatId.ToString();
 
+            Claim? IdClaim = Context.User.Claims.FirstOrDefault(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/authentication");
+
+            if (IdClaim == null)
+                return;
+
+            int userId = Int32.Parse(IdClaim.Value);
+
+            var chatUser = dbContext.ChatUsers.FirstOrDefault(i => i.ChatId == chatId && i.UserId == userId);
+
+            if (chatUser == null)
+                return;
+
+            dbContext.ChatUsers.Remove(chatUser);
+            await dbContext.SaveChangesAsync();
+
+            await Clients.Group(chatId.ToString()).SendAsync("UserLeft", _mapper.Map<ChatUserResponse>(chatUser));
+
+            var chat = dbContext.Chats.Include(i => i.ChatUsers)
+                .FirstOrDefault(i => i.Id == chatId);
+
+            await AddUsersToGroups(chat.ChatUsers, chatId.ToString());
+        }
+        private async Task AddUsersToGroups(IEnumerable<ChatUser> chatUsers, string chatId)
+        {
             // Removing clients
 
             var removedClients = _clientGroups.Where(
-                cg => cg.ChatId == chatId && 
-                chatUsers.Any(cu => cu.UserId != cg.UserId)
-            );
+                cg => cg.ChatId == chatId &&
+                !chatUsers.Any(cu => cu.UserId != cg.UserId)
+            ).ToArray();
 
-            //var removedClients = _clientGroups.Where(cg => cg.ChatId == chatUsers.First().ChatId.ToString() && chatUsers.Any(cu => cu.UserId != cg.UserId)).ToArray();
-
-            List<Task> taskList = new List<Task>();
             foreach (var client in removedClients)
             {
-                var res = Groups.RemoveFromGroupAsync(client.ConnectionId, client.ChatId);
+                await Groups.RemoveFromGroupAsync(client.ConnectionId, client.ChatId);
                 _clientGroups.Remove(client);
-                taskList.Add(res);
             }
-            Task.WaitAll(taskList.ToArray());
-            taskList.Clear();
-
 
             // Adding new clients
-            var newChatUsers = chatUsers.Where(cu => _clientGroups.Any(cg => cg.UserId != cu.UserId && cg.ChatId == null));
+            var newChatUsers = chatUsers.Where(cu => _clientGroups.Any(cg => cg.UserId == cu.UserId)).DistinctBy(i => i.UserId);
 
             foreach (var client in newChatUsers)
             {
                 var newClient = _clientGroups.FirstOrDefault(i => i.UserId == client.UserId);
 
-                _clientGroups.Add(new ClientGroup(newClient.ConnectionId, newClient.ChatId, newClient.UserId));
-                var res = Groups.AddToGroupAsync(newClient.ConnectionId, newClient.ChatId);
+                _clientGroups.Add(new ClientGroup(newClient.ConnectionId, chatId, newClient.UserId));
+                await Groups.AddToGroupAsync(newClient.ConnectionId, chatId);
             }
-            Task.WaitAll(taskList.ToArray());
-
-            var removedChatUsers = dbContext.ChatUsers.Where(i => i.ChatId == chatUsers.First().ChatId);
-
-            if (removedChatUsers.Count() != 0)
-                dbContext.ChatUsers.RemoveRange(removedChatUsers);
-
-            dbContext.ChatUsers.AddRange(chatUsers);
-            await dbContext.SaveChangesAsync();
         }
-
         public override async Task OnConnectedAsync()
         {
             using var dbContext = new MessengerContext();
@@ -142,12 +212,13 @@ namespace ChesnokMessengerAPI.SignalR
             foreach(var chat in chatUsers)
             {
                 _clientGroups.Add(new ClientGroup(Context.ConnectionId, chat.Id.ToString(), userId));
-                _clientGroups.Add(new ClientGroup(Context.ConnectionId, userId));
-
+                
                var res = Groups.AddToGroupAsync(Context.ConnectionId, chat.ChatId.ToString());
                taskList.Add(res);
             }
             Task.WaitAll(taskList.ToArray());
+
+            _clientGroups.Add(new ClientGroup(Context.ConnectionId, userId));
 
             await base.OnConnectedAsync();
         }
