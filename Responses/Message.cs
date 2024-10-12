@@ -17,4 +17,5 @@ public partial class MessageResponse
 
     public string? Text { get; set; }
 
+    public UserResponse User { get; set; }
 }

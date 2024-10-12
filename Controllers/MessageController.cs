@@ -12,6 +12,7 @@ using static System.Net.Mime.MediaTypeNames;
 using AutoMapper;
 using ChesnokMessengerAPI.Templates;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChesnokMessengerAPI.Controllers
 {
@@ -49,7 +50,9 @@ namespace ChesnokMessengerAPI.Controllers
         public IActionResult GetLastMessages(int chatId, int amount)
         {
             var context = new MessengerContext();
-            var messages = context.Messages.Where(i => i.ChatId == chatId)
+            var messages = context.Messages
+                .Include(i => i.User)
+                .Where(i => i.ChatId == chatId)
                 .ToArray()
                 .Reverse()
                 .Take(amount);
@@ -63,6 +66,7 @@ namespace ChesnokMessengerAPI.Controllers
             var context = new MessengerContext();
             
             var messages = context.Messages.Where(i => i.Id < messageId && i.ChatId == chatId)
+                .Include(i => i.User)
                 .ToArray()
                 .Reverse()
                 .Take(amount);

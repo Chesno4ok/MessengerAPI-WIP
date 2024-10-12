@@ -63,7 +63,11 @@ namespace ChesnokMessengerAPI.SignalR
             dbContext.Messages.Add(newMessage);
             await dbContext.SaveChangesAsync();
 
-            Clients.Groups(messageTemplate.ChatId.ToString()).SendAsync("ReceiveMessage", newMessage);
+            newMessage = dbContext.Messages.Include(i => i.User).FirstOrDefault(i => i.Id == newMessage.Id);
+
+            var messageResponse = _mapper.Map<MessageResponse>(newMessage);
+
+            Clients.Groups(messageTemplate.ChatId.ToString()).SendAsync("ReceiveMessage", messageResponse);
         }
         [Authorize]
         public async Task EditMessage(EditMessageTemplate messageTemplate)

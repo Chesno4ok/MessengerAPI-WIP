@@ -49,18 +49,7 @@ namespace ChesnokMessengerAPI.Middleware
                 if (!result)
                     invalidParameters.AddRange(m.GetCustomAttribute<ParameterValidation>().parameters);
 
-                //object[] attributes = m.GetCustomAttributes(typeof(ParameterValidation), false).ToArray();
-
-                //foreach(ParameterValidation a in attributes)
-                //{
-                //    if (a.parameters.All(i => _query.ContainsKey(i)))
-                //    {
-                //        result = (bool)m.Invoke(this, new object[1] {_query});
-
-                //        if(!result)
-                //            invalidParameters.AddRange(a.parameters);
-                //    }
-                //}
+                
 
             }
 

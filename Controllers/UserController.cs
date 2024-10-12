@@ -133,7 +133,6 @@ namespace ChesnokMessengerAPI.Controllers
             return Ok(newUser.ToJson());
         }
         [HttpPost("register_user")]
-        [Authorize]
         public async Task<IActionResult> RegisterUser(UserTemplate userTemplate)
         {
             using var context = new MessengerContext();
@@ -158,7 +157,6 @@ namespace ChesnokMessengerAPI.Controllers
             return Ok(user.ToJson());
         }
         [HttpGet("check_login")]
-        [Authorize]
         public IActionResult CheckUser(string login)
         {
             var context = new MessengerContext();
