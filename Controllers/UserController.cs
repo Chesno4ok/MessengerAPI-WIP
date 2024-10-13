@@ -175,7 +175,7 @@ namespace ChesnokMessengerAPI.Controllers
             User[] users;
             using (var context = new MessengerContext())
             {
-                users = context.Users.Where(i => i.Name.ToLower().StartsWith(username)).ToArray();
+                users = context.Users.Where(i => i.Name.ToLower().StartsWith(username.ToLower())).ToArray();
             }
 
             return Ok(users.ToJson());
