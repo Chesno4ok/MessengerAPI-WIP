@@ -1,3 +1,5 @@
+[English description](https://github.com/Chesno4ok/MessengerAPI-WIP/blob/master/ReadMe_EN.md)
+
 # Web API для мессенджера
 
 Данный проект реализует Web API для мессенджера с поддержкой real-time обмена сообщениями через SignalR. Десктопное приложение можете посмотреть [здесь](https://github.com/Chesno4ok/Avalonia-Messenger-WIP).
