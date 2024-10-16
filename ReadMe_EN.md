@@ -1,4 +1,4 @@
-[Русская версия](https://github.com/Chesno4ok/MessengerAPI-WIP)
+[Русская версия](https://github.com/Chesno4ok/MessengerAPI-WIP/blob/master/README.md)
 
 # Web API for Messenger
 
