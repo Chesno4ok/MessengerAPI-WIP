@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using ChesnokMessengerAPI.Models;
+using ChesnokMessengerAPI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using File = ChesnokMessengerAPI.Models.File;
 
 namespace ChesnokMessengerAPI;
 
@@ -28,9 +33,12 @@ public partial class MessengerContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=193.124.44.234;Port=5432;Database=Messenger;Username=postgres;Password=HGdsfe3as");
+    {
+        var config = AppConfiguration.GetInstance();
+        var connectionString = config.Configuration.GetConnectionString("MessengerDatabase");
 
+        optionsBuilder.UseNpgsql(connectionString);
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chat>(entity =>

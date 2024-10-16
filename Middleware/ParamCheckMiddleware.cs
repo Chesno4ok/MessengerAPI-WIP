@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using ChesnokMessengerAPI.Models;
 using ChesnokMessengerAPI.Responses;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -40,8 +41,6 @@ namespace ChesnokMessengerAPI.Middleware
                  .Where(i => i.GetCustomAttribute<ParameterValidation>() != null)
                  .Where(i => i.GetCustomAttribute<ParameterValidation>().parameters.All(i => _query.ContainsKey(i)));
                     
-                
-
 
             foreach(var m in methods)
             {
@@ -62,7 +61,7 @@ namespace ChesnokMessengerAPI.Middleware
 
         private void SendBadRequst(HttpContext context, string reason, string[] parameters)
         {
-            context.Response.StatusCode = 401;
+            context.Response.StatusCode = 400;
             context.Response.WriteAsync(new InvalidParametersResponse("Error", reason, parameters).ToJson());
         }
 

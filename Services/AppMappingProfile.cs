@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using ChesnokMessengerAPI.Templates;
+using ChesnokMessengerAPI.Models;
 
 namespace ChesnokMessengerAPI.Services
 {

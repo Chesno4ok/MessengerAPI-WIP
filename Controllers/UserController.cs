@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ChesnokMessengerAPI.Middleware;
+using ChesnokMessengerAPI.Models;
 using ChesnokMessengerAPI.Responses;
 using ChesnokMessengerAPI.Services;
 using ChesnokMessengerAPI.Templates;
@@ -43,6 +44,31 @@ namespace ChesnokMessengerAPI.Controllers
             return Ok(user.ToJson());
         }
 
+        [HttpGet("get_me")]
+        [Authorize]
+        public IActionResult GetMe()
+        {
+            var dbContext = new MessengerContext();
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity == null)
+                return BadRequest();
+
+            Claim? idClaim = identity.Claims.FirstOrDefault(i => i.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/authentication");
+
+            if (idClaim == null)
+                return BadRequest();
+
+            int userId = Int32.Parse(idClaim.Value);
+
+            var user = dbContext.Users.FirstOrDefault(i => i.Id == userId);
+
+            if (user == null)
+                return BadRequest();
+
+            return Ok(user.ToJson());
+        }
+
 
         [HttpGet("login")]
         public IActionResult Login(string login, string password)
@@ -75,43 +101,6 @@ namespace ChesnokMessengerAPI.Controllers
             return Ok(userResponse.ToJson());
         }
 
-        // Get a user's token
-        //[HttpGet("login")]
-        //public IActionResult GetToken(string login, string password)
-        //{
-        //    // Client validation
-        //    var context = new MessengerContext();
-
-        //    var loginHash = TokenService.GenerateHash(login);
-        //    var passwordHash = TokenService.GenerateHash(password);
-
-        //    var user = context.Users.FirstOrDefault(i => i.LoginHash == TokenService.GenerateHash(login)
-        //    && i.PasswordHash == TokenService.GenerateHash(password));
-
-        //    if (user == null)
-        //        return BadRequest(new InvalidParametersResponse("Error", "Invalid Credentials", new string[] { "Login", "Password" }).ToJson());
-
-
-        //    // Generating new token
-
-        //    var stringToken = TokenService.GenerateToken();
-        //    var tokenHash = TokenService.GenerateHash(new Guid(stringToken));
-
-        //    var newToken = new Token()
-        //    {
-        //        UserId = user.Id,
-        //        TokenHash = tokenHash,
-        //        CreationDate = DateTime.UtcNow
-        //    };
-
-        //    context.Tokens.Add(newToken);
-
-        //    context.SaveChanges();
-
-        //    var tokenInfo = new { UserId = user.Id, Token = stringToken };
-
-        //    return Ok(tokenInfo.ToJson());
-        //}
 
         // Change user's name
         [HttpPut("edit_user")]

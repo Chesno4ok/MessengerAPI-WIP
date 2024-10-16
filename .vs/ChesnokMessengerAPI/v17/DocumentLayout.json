@@ -3,32 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|c:\\users\\chesn\\yandexdisk\\repos\\123\\chesnokmessengerapi\\chesnokmessengerapi\\middleware\\paramcheckmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:middleware\\paramcheckmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|c:\\users\\chesn\\yandexdisk\\repos\\123\\chesnokmessengerapi\\chesnokmessengerapi\\messengercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:messengercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|c:\\users\\chesn\\yandexdisk\\repos\\123\\chesnokmessengerapi\\chesnokmessengerapi\\services\\configuration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:services\\configuration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\signalr\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:signalr\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|c:\\users\\chesn\\yandexdisk\\repos\\123\\chesnokmessengerapi\\chesnokmessengerapi\\config.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:config.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\controllers\\messagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:controllers\\messagecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|c:\\users\\chesn\\yandexdisk\\repos\\123\\chesnokmessengerapi\\chesnokmessengerapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\responses\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:responses\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\templates\\usertemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:templates\\usertemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|c:\\users\\chesn\\yandexdisk\\repos\\123\\chesnokmessengerapi\\chesnokmessengerapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 491,
-          "SelectedChildIndex": 15,
+          "SelectedChildIndex": 16,
           "Children": [
             {
               "$type": "Bookmark",
@@ -90,88 +82,68 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Message.cs",
-              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Responses\\Message.cs",
-              "RelativeDocumentMoniker": "Responses\\Message.cs",
-              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Responses\\Message.cs",
-              "RelativeToolTip": "Responses\\Message.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAmAAAA",
+              "DocumentIndex": 1,
+              "Title": "Configuration.cs",
+              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Services\\Configuration.cs",
+              "RelativeDocumentMoniker": "Services\\Configuration.cs",
+              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Services\\Configuration.cs",
+              "RelativeToolTip": "Services\\Configuration.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAPAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-12T08:35:56.081Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MessageController.cs",
-              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Controllers\\MessageController.cs",
-              "RelativeDocumentMoniker": "Controllers\\MessageController.cs",
-              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Controllers\\MessageController.cs",
-              "RelativeToolTip": "Controllers\\MessageController.cs",
-              "ViewState": "AQIAAE0AAAAAAAAAAAA0wF4AAAAlAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-12T08:24:27.579Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "UserTemplate.cs",
-              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Templates\\UserTemplate.cs",
-              "RelativeDocumentMoniker": "Templates\\UserTemplate.cs",
-              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Templates\\UserTemplate.cs",
-              "RelativeToolTip": "Templates\\UserTemplate.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAvAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T15:05:54.371Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ParamCheckMiddleware.cs",
-              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Middleware\\ParamCheckMiddleware.cs",
-              "RelativeDocumentMoniker": "Middleware\\ParamCheckMiddleware.cs",
-              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Middleware\\ParamCheckMiddleware.cs",
-              "RelativeToolTip": "Middleware\\ParamCheckMiddleware.cs",
-              "ViewState": "AQIAAD0AAAAAAAAAAAAIwEsAAAAMAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T14:49:17.487Z",
+              "WhenOpened": "2024-10-16T16:02:52.872Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UserController.cs",
-              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Controllers\\UserController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UserController.cs",
-              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Controllers\\UserController.cs",
-              "RelativeToolTip": "Controllers\\UserController.cs",
-              "ViewState": "AQIAAKAAAAAAAAAAAADwv60AAAAJAAAA",
+              "DocumentIndex": 2,
+              "Title": "Config.cs",
+              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Config.cs",
+              "RelativeDocumentMoniker": "Config.cs",
+              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Config.cs",
+              "RelativeToolTip": "Config.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAA+AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T14:31:38.578Z"
+              "WhenOpened": "2024-10-16T15:04:40.641Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAAAQwB0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-16T14:53:39.611Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "ChatController.cs",
-              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Controllers\\ChatController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ChatController.cs",
-              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\Controllers\\ChatController.cs",
-              "RelativeToolTip": "Controllers\\ChatController.cs",
-              "ViewState": "AQIAACkAAAAAAAAAAAAvwDcAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-08T16:19:30.001Z"
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-16T14:49:36.549Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ChatHub.cs",
-              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\SignalR\\ChatHub.cs",
-              "RelativeDocumentMoniker": "SignalR\\ChatHub.cs",
-              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\SignalR\\ChatHub.cs",
-              "RelativeToolTip": "SignalR\\ChatHub.cs",
-              "ViewState": "AQIAAJcAAAAAAAAAAAAYwKwAAAAAAAAA",
+              "DocumentIndex": 0,
+              "Title": "MessengerContext.cs",
+              "DocumentMoniker": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\MessengerContext.cs",
+              "RelativeDocumentMoniker": "MessengerContext.cs",
+              "ToolTip": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\MessengerContext.cs",
+              "RelativeToolTip": "MessengerContext.cs",
+              "ViewState": "AQIAACAAAAAAAAAAAAAowCYAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-04T17:16:05.642Z"
+              "WhenOpened": "2024-10-15T17:00:49.191Z",
+              "EditorCaption": ""
             }
           ]
         },

@@ -6,13 +6,13 @@ using Newtonsoft.Json;
 using System.Text;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net.WebSockets;
-using ChesnokMessengerAPI.WebSockets;
 using ChesnokMessengerAPI.Services;
 using static System.Net.Mime.MediaTypeNames;
 using AutoMapper;
 using ChesnokMessengerAPI.Templates;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using ChesnokMessengerAPI.Models;
 
 namespace ChesnokMessengerAPI.Controllers
 {

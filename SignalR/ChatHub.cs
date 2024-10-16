@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ChesnokMessengerAPI.Models;
 using ChesnokMessengerAPI.Services;
 using ChesnokMessengerAPI.Templates;
 using Microsoft.AspNetCore.Authorization;

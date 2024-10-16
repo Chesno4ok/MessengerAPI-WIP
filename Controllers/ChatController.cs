@@ -7,6 +7,7 @@ using AutoMapper;
 using ChesnokMessengerAPI.Templates;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Authorization;
+using ChesnokMessengerAPI.Models;
 
 namespace ChesnokMessengerAPI.Controllers
 {
