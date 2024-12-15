@@ -105,14 +105,17 @@ namespace ChesnokMessengerAPI.Controllers
         // Change user's name
         [HttpPut("edit_user")]
         [Authorize]
-        public IActionResult EditUser( EditUserTemplate userTemplate)
+        public IActionResult EditUser(EditUserTemplate userTemplate)
         {
             var context = new MessengerContext();
 
             var newUser = context.Users.FirstOrDefault(i => i.Id == userTemplate.Id);
             
-            newUser.LoginHash = TokenService.GenerateHash(userTemplate.Login);
-            newUser.PasswordHash = TokenService.GenerateHash(userTemplate.Password);
+
+            if(userTemplate.Login is null)
+                newUser.LoginHash = TokenService.GenerateHash(userTemplate.Login);
+            if (userTemplate.Password is null)
+                newUser.PasswordHash = TokenService.GenerateHash(userTemplate.Password);
 
 
             newUser = (User)_mapper.Map(userTemplate, newUser, typeof(UserTemplate), typeof(User));

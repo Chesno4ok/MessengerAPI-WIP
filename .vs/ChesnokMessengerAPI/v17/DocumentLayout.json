@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|u:\\users\\destkop\\messenger\\messengerapi-wip\\templates\\editusertemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:templates\\editusertemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|u:\\users\\destkop\\messenger\\messengerapi-wip\\templates\\usertemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:templates\\usertemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|u:\\users\\destkop\\messenger\\messengerapi-wip\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|u:\\users\\destkop\\messenger\\messengerapi-wip\\templates\\usernametemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:templates\\usernametemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|u:\\users\\destkop\\messenger\\messengerapi-wip\\signalr\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:signalr\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -94,7 +110,59 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserNameTemplate.cs",
+              "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Templates\\UserNameTemplate.cs",
+              "RelativeDocumentMoniker": "Templates\\UserNameTemplate.cs",
+              "ToolTip": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Templates\\UserNameTemplate.cs",
+              "RelativeToolTip": "Templates\\UserNameTemplate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-15T15:12:07.068Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EditUserTemplate.cs",
+              "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Templates\\EditUserTemplate.cs",
+              "RelativeDocumentMoniker": "Templates\\EditUserTemplate.cs",
+              "ToolTip": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Templates\\EditUserTemplate.cs*",
+              "RelativeToolTip": "Templates\\EditUserTemplate.cs*",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAcwAwAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-15T15:11:48.352Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "UserTemplate.cs",
+              "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Templates\\UserTemplate.cs",
+              "RelativeDocumentMoniker": "Templates\\UserTemplate.cs",
+              "ToolTip": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Templates\\UserTemplate.cs",
+              "RelativeToolTip": "Templates\\UserTemplate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-15T15:11:45.813Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UserController.cs",
+              "ToolTip": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Controllers\\UserController.cs",
+              "RelativeToolTip": "Controllers\\UserController.cs",
+              "ViewState": "AgIAAGIAAAAAAAAAAAAIwHIAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-15T15:09:04.634Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "ParamCheckMiddleware.cs",
               "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Middleware\\ParamCheckMiddleware.cs",
               "RelativeDocumentMoniker": "Middleware\\ParamCheckMiddleware.cs",
@@ -107,20 +175,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "ChatHub.cs",
               "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\SignalR\\ChatHub.cs",
               "RelativeDocumentMoniker": "SignalR\\ChatHub.cs",
               "ToolTip": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\SignalR\\ChatHub.cs",
               "RelativeToolTip": "SignalR\\ChatHub.cs",
-              "ViewState": "AgIAAAABAAAAAAAAAAAkwA4BAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAAEwAAAAAAAAAAAArwF0AAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-15T14:48:36.206Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "Configuration.cs",
               "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Services\\Configuration.cs",
               "RelativeDocumentMoniker": "Services\\Configuration.cs",
@@ -132,7 +200,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "Config.cs",
               "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Config.cs",
               "RelativeDocumentMoniker": "Config.cs",
@@ -145,7 +213,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "Program.cs",
               "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -157,7 +225,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "appsettings.json",
               "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -170,7 +238,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "MessengerContext.cs",
               "DocumentMoniker": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\MessengerContext.cs",
               "RelativeDocumentMoniker": "MessengerContext.cs",
