@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "h0EZbJHYGMPCJQKBl29WYbSsWcO4oFs1V6JfA3+dNds0+KHQGFMw7bQOzWcWx5mhOyl8tHDaaobJKdtjFrrBJw==",
+  "dgSpecHash": "cRTvCRpXHWY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\chesn\\YandexDisk\\repos\\123\\ChesnokMessengerAPI\\ChesnokMessengerAPI\\ChesnokMessengerAPI.csproj",
+  "projectFilePath": "U:\\Users\\Destkop\\Messenger\\MessengerAPI-WIP\\ChesnokMessengerAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\chesn\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\chesn\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",

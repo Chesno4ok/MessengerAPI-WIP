@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "xTtBE+RQk6PkwGS44Lrv1cjZtHYTCe55/6A5i+i7cHo=",
+  "Hash": "X5CJD/L/fRbktdFYH3RjUFZgVJ1Sl/o41XbOl6q2Y8w=",
   "Source": "ChesnokMessengerAPI",
   "BasePath": "_content/ChesnokMessengerAPI",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

@@ -213,15 +213,13 @@ namespace ChesnokMessengerAPI.SignalR
 
             var chatUsers = dbContext.ChatUsers.Where(i => i.UserId == userId);
 
-            List<Task> taskList = new List<Task>();
             foreach(var chat in chatUsers)
             {
-                _clientGroups.Add(new ClientGroup(Context.ConnectionId, chat.Id.ToString(), userId));
+               _clientGroups.Add(new ClientGroup(Context.ConnectionId, chat.Id.ToString(), userId));
                 
-               var res = Groups.AddToGroupAsync(Context.ConnectionId, chat.ChatId.ToString());
-               taskList.Add(res);
+               Groups.AddToGroupAsync(Context.ConnectionId, chat.ChatId.ToString());
+               
             }
-            Task.WaitAll(taskList.ToArray());
 
             _clientGroups.Add(new ClientGroup(Context.ConnectionId, userId));
 
@@ -270,7 +268,9 @@ namespace ChesnokMessengerAPI.SignalR
 
         public ClientGroup(string connectionId, int userId)
         {
-
+            ConnectionId = connectionId;
+            ChatId = "";
+            UserId = userId;
         }
     }
 }
