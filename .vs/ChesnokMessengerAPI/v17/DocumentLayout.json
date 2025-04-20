@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "U:\\Users\\Destkop\\ChesnokovDiploma\\MessengerAPI-WIP\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|u:\\users\\destkop\\chesnokovdiploma\\messengerapi-wip\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|u:\\users\\destkop\\chesnokovdiploma\\messengerapi-wip\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|u:\\users\\destkop\\chesnokovdiploma\\messengerapi-wip\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BEAEEC54-670A-47E9-8AEB-C886C7FD940C}|ChesnokMessengerAPI.csproj|u:\\users\\destkop\\chesnokovdiploma\\messengerapi-wip\\templates\\editusertemplate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -58,7 +58,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 491,
-          "SelectedChildIndex": 12,
+          "SelectedChildIndex": 20,
           "Children": [
             {
               "$type": "Bookmark",
@@ -110,7 +110,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": ".gitignore",
               "DocumentMoniker": "U:\\Users\\Destkop\\ChesnokovDiploma\\MessengerAPI-WIP\\.gitignore",
               "RelativeDocumentMoniker": ".gitignore",
@@ -208,13 +208,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "appsettings.json",
               "DocumentMoniker": "U:\\Users\\Destkop\\ChesnokovDiploma\\MessengerAPI-WIP\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
               "ToolTip": "U:\\Users\\Destkop\\ChesnokovDiploma\\MessengerAPI-WIP\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABvAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2024-10-16T14:49:36.549Z",
               "EditorCaption": ""
